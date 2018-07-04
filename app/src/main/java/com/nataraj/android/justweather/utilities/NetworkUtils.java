@@ -1,5 +1,6 @@
 package com.nataraj.android.justweather.utilities;
 
+import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
@@ -23,7 +24,7 @@ public final class NetworkUtils {
     */
 
     private static final String API_URL = "https://api.openweathermap.org";
-    private static final String API_PATH = "/data/2.5/forecast";
+    private static final String API_PATH = "data/2.5/forecast";
     private static final String API_KEY_PARAM = "appid";
     private static final String API_KEY = "8e72e6c6015c87b8332f61d8da0f82ab";
     private static final String FORMAT_PARAM = "mode";
@@ -31,15 +32,16 @@ public final class NetworkUtils {
     private static final String QUERY_PARAM = "q";
     private static final String COUNTRY = "in";
 
-//    TODO to be implement after shared preferences done
-    public static URL getURL() {
-        return null;
+//    TODO to be implement with user prefered location after shared preferences are done
+    public static URL getURL(Context context) {
+        String tempLocation = "Kuppam";
+        return buildUrlWithLocationQuery(tempLocation);
     }
 
     public static URL buildUrlWithLocationQuery(String locationQuery) {
         String finalLocationQuery = locationQuery + "," + COUNTRY;
         Uri weatherQueryUri = Uri.parse(API_URL).buildUpon()
-                .appendPath(API_PATH)
+                .appendEncodedPath(API_PATH)
                 .appendQueryParameter(QUERY_PARAM, finalLocationQuery)
                 .appendQueryParameter(FORMAT_PARAM, FORMAT_JSON)
                 .appendQueryParameter(API_KEY_PARAM, API_KEY)
@@ -47,7 +49,7 @@ public final class NetworkUtils {
 
         try {
             URL weatherQueryUrl = new URL(weatherQueryUri.toString());
-            Log.v(TAG, "URL: " + weatherQueryUrl);
+            Log.d(TAG, "URL: " + weatherQueryUrl);
             return weatherQueryUrl;
         } catch (MalformedURLException e) {
             e.printStackTrace();

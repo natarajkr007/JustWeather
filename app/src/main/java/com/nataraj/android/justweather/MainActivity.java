@@ -1,5 +1,7 @@
 package com.nataraj.android.justweather;
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -9,15 +11,22 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.nataraj.android.justweather.database.AppDatabase;
+import com.nataraj.android.justweather.sync.JustWeatherSyncTask;
+
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
+    private AppDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
 
 //        setting up the navigation drawer
         mDrawerLayout = findViewById(R.id.main_navigation_drawer);
+
+//        instantiating db instance
+        mDb = AppDatabase.getsInstance(getApplicationContext());
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
@@ -59,6 +71,16 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = findViewById(R.id.forecast_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+//        test: to check the data
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                Context context = getApplicationContext();
+                JustWeatherSyncTask.syncWeather(context, mDb);
+                return null;
+            }
+        }.execute();
     }
 
     @Override
