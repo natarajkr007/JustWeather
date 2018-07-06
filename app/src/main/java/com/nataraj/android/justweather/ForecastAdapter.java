@@ -2,6 +2,7 @@ package com.nataraj.android.justweather;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,8 @@ import java.util.List;
  */
 
 public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.WeatherViewHolder> {
+    
+    private static final String TAG = ForecastAdapter.class.getSimpleName();
 
     private List<WeatherEntry> mWeatherEntries;
     private Context mContext;
@@ -29,6 +32,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
 
     @Override
     public WeatherViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
         View view = LayoutInflater.from(mContext)
                 .inflate(R.layout.forecast_list_item, parent, false);
 
@@ -40,8 +44,8 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
         WeatherEntry weatherEntry = mWeatherEntries.get(position);
         holder.dateView.setText(weatherEntry.getDate());
         holder.weatherDescriptionView.setText(weatherEntry.getWeatherDescription());
-        holder.maxTempView.setText(Double.toString(weatherEntry.getMaxTemp()));
-        holder.minTempView.setText(Double.toString(weatherEntry.getMinTemp()));
+        holder.maxTempView.setText(Double.toString(weatherEntry.getMaxTemp()) + "\u00b0\u004b");
+        holder.minTempView.setText(Double.toString(weatherEntry.getMinTemp()) + "\u00b0\u004b");
 //        TODO set image resource based on icon code
 //        holder.weatherDescriptionIconView.setImageResource();
     }
@@ -53,6 +57,10 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
         }
 
         return mWeatherEntries.size();
+    }
+
+    public void setTasks(List<WeatherEntry> weatherEntries) {
+        mWeatherEntries = weatherEntries;
     }
 
     class WeatherViewHolder extends RecyclerView.ViewHolder {

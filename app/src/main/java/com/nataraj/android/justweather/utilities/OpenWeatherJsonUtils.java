@@ -99,12 +99,14 @@ public class OpenWeatherJsonUtils {
             double humidity;
             String weatherDescription;
             String weatherIcon;
-            int cloudsPrecent;
+            int cloudsPercent;
             double windSpeed;
             double windDeg;
             double rain3h = 0;
             double snow3h = 0;
             String dateTxt;
+            String date;
+            String time;
             JSONObject hourRainForecast = null;
             JSONObject hourSnowForecast = null;
 
@@ -129,7 +131,7 @@ public class OpenWeatherJsonUtils {
             humidity = hourMainForecast.getDouble(OWM_LIST_MAIN_HUMIDITY);
             weatherDescription = weather.getString(OWM_LIST_WEATHER_DESCRIPTION);
             weatherIcon = weather.getString(OWM_LIST_WEATHER_ICON);
-            cloudsPrecent = hourCloudsForecast.getInt(OWM_LIST_CLOUDS_ALL);
+            cloudsPercent = hourCloudsForecast.getInt(OWM_LIST_CLOUDS_ALL);
             windSpeed = hourWindForecast.getDouble(OWM_LIST_WIND_SPEED);
             windDeg = hourWindForecast.getDouble(OWM_LIST_WIND_DEG);
             if (hourRainForecast != null && hourRainForecast.has(OWM_LIST_RAIN_3H)) {
@@ -140,8 +142,11 @@ public class OpenWeatherJsonUtils {
             }
             dateTxt = hourForecast.getString(OWM_LIST_DT_TXT);
 
+            date = dateTxt.split(" ")[0];
+            time = dateTxt.split(" ")[1];
+
             WeatherEntry weatherEntry = new WeatherEntry(dateTimeMillis, minTemp, maxTemp, pressure, humidity, weatherDescription,
-                    weatherIcon, cloudsPrecent,windSpeed, windDeg, rain3h, snow3h, dateTxt);
+                    weatherIcon, cloudsPercent,windSpeed, windDeg, rain3h, snow3h, date, time);
             mDb.weatherDao().insertWeatherEntry(weatherEntry);
             Log.d(TAG, "Data Entry made");
         }

@@ -12,7 +12,8 @@ import java.util.Date;
  * Created by nataraj-7085 on 4/7/18.
  */
 
-@Entity(tableName = "forecast", indices = {@Index(value = "millis", unique = true)})
+// TODO handle uniqueness on millies
+@Entity(tableName = "forecast")
 public class WeatherEntry {
 
     @PrimaryKey(autoGenerate = true)
@@ -52,8 +53,11 @@ public class WeatherEntry {
 
     private String date;
 
+    private String time;
+
     public WeatherEntry(long millis, double minTemp, double maxTemp, double pressure, double humidity, String weatherDescription,
-                        String weatherIcon, int cloudsPercent, double windSpeed, double windDeg, double rain3h, double snow3h, String date) {
+                        String weatherIcon, int cloudsPercent, double windSpeed, double windDeg, double rain3h, double snow3h,
+                        String date, String time) {
         this.millis = millis;
         this.minTemp = minTemp;
         this.maxTemp = maxTemp;
@@ -67,6 +71,7 @@ public class WeatherEntry {
         this.rain3h = rain3h;
         this.snow3h = snow3h;
         this.date = date;
+        this.time = time;
     }
 
     public String getDate() {
@@ -74,13 +79,18 @@ public class WeatherEntry {
         Date todayDate = new Date();
         String formattedToday = dateFormat.format(todayDate);
         String[] splitDate = formattedToday.split(",");
-        if (splitDate[0].equals(date.split(" ")[0])) {
+        if (splitDate[0].equals(date)) {
             String displayDate = "Today";
             return displayDate;
         } else {
-            String displayDate = splitDate[1] + ", " + splitDate[2] + " " + splitDate[3];
+//            String displayDate = splitDate[1] + ", " + splitDate[2] + " " + splitDate[3];
+            String displayDate = date;
             return displayDate;
         }
+    }
+
+    public String getTime() {
+        return time;
     }
 
     public double getMinTemp() {

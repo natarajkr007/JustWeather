@@ -23,6 +23,9 @@ public interface WeatherDao {
     @Delete
     void deleteWeatherEntry(WeatherEntry weatherEntry);
 
-    @Query("SELECT * FROM forecast WHERE millis = :millis")
-    List<WeatherEntry> loadForecastByMillis(long millis);
+    @Query("SELECT * FROM forecast WHERE date = :date")
+    List<WeatherEntry> loadForecastByDate(String date);
+
+    @Query("DELETE FROM forecast")
+    void nukeData();
 }
