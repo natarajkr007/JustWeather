@@ -14,10 +14,8 @@ import android.widget.TextView;
 
 import com.nataraj.android.justweather.database.AppDatabase;
 import com.nataraj.android.justweather.database.WeatherEntry;
+import com.nataraj.android.justweather.utilities.WeatherIconUtils;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -89,8 +87,7 @@ public class TodayForecastFragment extends Fragment {
                         );
                         nowTempView.setText(Double.toString(presentForecast.getMaxTemp()) + "\u00b0\u004b");
                         weatherDescriptionView.setText(presentForecast.getWeatherDescription());
-//                        TODO put weather icon based on weather desc.
-//                        weatherIcon.setImageResource();
+                        weatherIcon.setImageResource(WeatherIconUtils.getWeatherIconId(presentForecast.getWeatherIcon()));
 
                         mTodayForecastAdapter.setTasks(weatherEntries);
                         mTodayForecastAdapter.notifyDataSetChanged();

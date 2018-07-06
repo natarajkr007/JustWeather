@@ -101,6 +101,14 @@ public class WeatherEntry {
         return maxTemp;
     }
 
+    public double getMinTempC() {
+        return minTemp - 273.15;
+    }
+
+    public double getMaxTempC() {
+        return maxTemp - 273.15;
+    }
+
     public double getPressure() {
         return pressure;
     }

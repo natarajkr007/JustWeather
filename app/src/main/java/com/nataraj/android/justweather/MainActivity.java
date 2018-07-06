@@ -1,6 +1,8 @@
 package com.nataraj.android.justweather;
 
+import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -11,11 +13,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import com.nataraj.android.justweather.database.AppDatabase;
 import com.nataraj.android.justweather.sync.JustWeatherSyncTask;
@@ -59,8 +64,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Context context = getApplicationContext();
-                JustWeatherSyncTask.syncWeather(context, mDb);
+//                TODO implement shared preferences here
+                JustWeatherSyncTask.syncWeather(context, mDb, "Kuppam");
 
+                Log.d(TAG, "run: on UI Thread");
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -111,18 +118,49 @@ public class MainActivity extends AppCompatActivity {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
-
-            case R.id.main_search:
-                onSearchRequested();
-                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setCity(final String location) {
+        deleteData();
+        AppExecutors.getInstance().networkIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                Context context = getApplicationContext();
+                JustWeatherSyncTask.syncWeather(context, mDb, location);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setViewPager();
+                    }
+                });
+            }
+        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu_view, menu);
+
+        final MenuItem menuItem = menu.findItem(R.id.main_search);
+        final SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                setCity(query);
+                menuItem.collapseActionView();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
         return true;
     }
 

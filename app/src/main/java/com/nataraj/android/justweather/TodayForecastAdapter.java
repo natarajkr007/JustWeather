@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nataraj.android.justweather.database.WeatherEntry;
+import com.nataraj.android.justweather.utilities.NetworkUtils;
+import com.nataraj.android.justweather.utilities.WeatherIconUtils;
 
 import java.util.List;
 
@@ -38,11 +40,10 @@ public class TodayForecastAdapter extends RecyclerView.Adapter<TodayForecastAdap
 
     @Override
     public void onBindViewHolder(WeatherViewHolder holder, int position) {
-        WeatherEntry hourWeatherEntry = mHourWeatherEntries.get(position);
+        final WeatherEntry hourWeatherEntry = mHourWeatherEntries.get(position);
         holder.hourTempView.setText(Double.toString(hourWeatherEntry.getMaxTemp()) + "\u00b0\u004b");
         holder.hourTimeView.setText(hourWeatherEntry.getTime());
-//        TODO set weather icon
-//        holder.hourWeatherIcon.setImageResource();
+        holder.hourWeatherIcon.setImageResource(WeatherIconUtils.getWeatherIconId(hourWeatherEntry.getWeatherIcon()));
     }
 
     @Override

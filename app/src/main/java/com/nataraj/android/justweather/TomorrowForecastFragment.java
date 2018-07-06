@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.nataraj.android.justweather.database.AppDatabase;
 import com.nataraj.android.justweather.database.WeatherEntry;
+import com.nataraj.android.justweather.utilities.WeatherIconUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -81,7 +82,7 @@ public class TomorrowForecastFragment extends Fragment {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(today);
                 cal.add(Calendar.DATE, 1);
-                Date tomorrow = cal.getTime();
+                final Date tomorrow = cal.getTime();
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 String queryDate = dateFormat.format(tomorrow);
                 weatherEntries = mDb.weatherDao().loadForecastByDate(queryDate);
@@ -97,8 +98,7 @@ public class TomorrowForecastFragment extends Fragment {
                         );
                         tempView.setText(Double.toString(tomorrowForecast.getMaxTemp()) + "\u00b0\u004b");
                         weatherDescriptionView.setText(tomorrowForecast.getWeatherDescription());
-//                        TODO put weather icon based on weather desc.
-//                        weatherIcon.setImageResource();
+                        weatherIcon.setImageResource(WeatherIconUtils.getWeatherIconId(tomorrowForecast.getWeatherIcon()));
 
                         mTodayForecastAdapter.setTasks(weatherEntries);
                         mTodayForecastAdapter.notifyDataSetChanged();

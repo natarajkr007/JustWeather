@@ -1,6 +1,8 @@
 package com.nataraj.android.justweather.utilities;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 
@@ -32,9 +34,11 @@ public final class NetworkUtils {
     private static final String QUERY_PARAM = "q";
     private static final String COUNTRY = "in";
 
+    private static final String IMG_URL = "http://openweathermap.org/img/w";
+
 //    TODO to be implement with user prefered location after shared preferences are done
-    public static URL getURL(Context context) {
-        String tempLocation = "Kuppam";
+    public static URL getURL(Context context, String location) {
+        String tempLocation = location;
         return buildUrlWithLocationQuery(tempLocation);
     }
 
@@ -76,5 +80,38 @@ public final class NetworkUtils {
         } finally {
             urlConnection.disconnect();
         }
+    }
+
+//    to get the image icons from server
+    public static Bitmap getWeatherIcon(String iconId) {
+        String extraPath = iconId + ".png";
+        Uri weatherIconUri = Uri.parse(IMG_URL).buildUpon()
+                .appendEncodedPath(extraPath)
+                .build();
+        URL weatherIconUrl;
+        try {
+            weatherIconUrl = new URL(weatherIconUri.toString());
+            return fetchedWeatherIcon(weatherIconUrl);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Bitmap fetchedWeatherIcon(URL url) throws IOException {
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        try {
+            InputStream in = urlConnection.getInputStream();
+
+            Bitmap myBitmap = BitmapFactory.decodeStream(in);
+            return myBitmap;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            urlConnection.disconnect();
+        }
+        return null;
     }
 }

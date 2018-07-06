@@ -2,7 +2,6 @@ package com.nataraj.android.justweather;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nataraj.android.justweather.database.WeatherEntry;
-
-import org.w3c.dom.Text;
+import com.nataraj.android.justweather.utilities.WeatherIconUtils;
 
 import java.util.List;
 
@@ -46,8 +44,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
         holder.weatherDescriptionView.setText(weatherEntry.getWeatherDescription());
         holder.maxTempView.setText(Double.toString(weatherEntry.getMaxTemp()) + "\u00b0\u004b");
         holder.minTempView.setText(Double.toString(weatherEntry.getMinTemp()) + "\u00b0\u004b");
-//        TODO set image resource based on icon code
-//        holder.weatherDescriptionIconView.setImageResource();
+        holder.weatherDescriptionIconView.setImageResource(WeatherIconUtils.getWeatherIconId(weatherEntry.getWeatherIcon()));
     }
 
     @Override

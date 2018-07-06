@@ -17,9 +17,9 @@ public class JustWeatherSyncTask {
 
     private static final String TAG = JustWeatherSyncTask.class.getSimpleName();
 
-    synchronized public static void syncWeather(Context context, AppDatabase mDb) {
+    synchronized public static void syncWeather(Context context, AppDatabase mDb, String location) {
         try {
-            URL weatherRequestUrl = NetworkUtils.getURL(context);
+            URL weatherRequestUrl = NetworkUtils.getURL(context, location);
 
             String jsonWeatherResponse = NetworkUtils.getResponseFromUrl(weatherRequestUrl);
             Log.d(TAG, "Asked to store in DB");
