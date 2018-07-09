@@ -55,7 +55,7 @@ public class TodayForecastAdapter extends RecyclerView.Adapter<TodayForecastAdap
         }
 
         holder.hourTempView.setText(maxTemp);
-        holder.hourTimeView.setText(hourWeatherEntry.getTime());
+        holder.hourTimeView.setText(hourWeatherEntry.getDecodedTime());
         holder.hourWeatherIcon.setImageResource(WeatherIconUtils.getWeatherIconId(hourWeatherEntry.getWeatherIcon()));
     }
 

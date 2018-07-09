@@ -82,14 +82,19 @@ public class MainActivity extends AppCompatActivity {
         AppExecutors.getInstance().networkIO().execute(new Runnable() {
             @Override
             public void run() {
-                Context context = getApplicationContext();
-                JustWeatherSyncTask.syncWeather(context, mDb, init_city);
+                final Context context = getApplicationContext();
+                final boolean res = JustWeatherSyncTask.syncWeather(context, mDb, init_city);
 
                 Log.d(TAG, "run: on UI Thread");
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        setViewPager();
+                        if (res) {
+                            setViewPager();
+                        } else {
+                            Toast.makeText(context, "City not found", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Please, change the city", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
             }
@@ -174,13 +179,18 @@ public class MainActivity extends AppCompatActivity {
         AppExecutors.getInstance().networkIO().execute(new Runnable() {
             @Override
             public void run() {
-                Context context = getApplicationContext();
-                JustWeatherSyncTask.syncWeather(context, mDb, location);
+                final Context context = getApplicationContext();
+                final boolean res = JustWeatherSyncTask.syncWeather(context, mDb, location);
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        setViewPager();
+                        if (res) {
+                            setViewPager();
+                        } else {
+                            Toast.makeText(context, "City not found", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Please, change the city", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
             }

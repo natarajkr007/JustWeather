@@ -87,7 +87,11 @@ public class TomorrowForecastFragment extends Fragment {
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 String queryDate = dateFormat.format(tomorrow);
                 weatherEntries = mDb.weatherDao().loadForecastByDate(queryDate);
-                tomorrowForecast = weatherEntries.get(0);
+                if (weatherEntries.size() > 0) {
+                    tomorrowForecast = weatherEntries.get(0);
+                } else {
+                    return;
+                }
 
                 getActivity().runOnUiThread(new Runnable() {
                     @Override

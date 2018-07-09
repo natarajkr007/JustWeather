@@ -76,7 +76,11 @@ public class TodayForecastFragment extends Fragment {
             @Override
             public void run() {
                 weatherEntries = mDb.weatherDao().loadForecastByDate("Today");
-                presentForecast = weatherEntries.get(0);
+                if (weatherEntries.size() > 0) {
+                    presentForecast = weatherEntries.get(0);
+                } else {
+                    return;
+                }
 
                 getActivity().runOnUiThread(new Runnable() {
                     @Override

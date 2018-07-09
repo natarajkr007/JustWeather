@@ -36,7 +36,6 @@ public final class NetworkUtils {
 
     private static final String IMG_URL = "http://openweathermap.org/img/w";
 
-//    TODO to be implement with user prefered location after shared preferences are done
     public static URL getURL(Context context, String location) {
         String tempLocation = location;
         return buildUrlWithLocationQuery(tempLocation);

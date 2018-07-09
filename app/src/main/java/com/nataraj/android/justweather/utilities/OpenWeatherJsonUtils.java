@@ -60,7 +60,7 @@ public class OpenWeatherJsonUtils {
     private static final String OWM_CITY_COUNTRY = "country";
     private static final String OWM_CITY_POPULATION = "population";
 
-    public static void getWeatherContentValuesFromJson(Context context, String forecastJsonStr, AppDatabase mDb)
+    public static boolean getWeatherContentValuesFromJson(Context context, String forecastJsonStr, AppDatabase mDb)
         throws JSONException {
 
         JSONObject forecastJson = new JSONObject(forecastJsonStr);
@@ -73,9 +73,9 @@ public class OpenWeatherJsonUtils {
                     break;
 
                 case HttpURLConnection.HTTP_NOT_FOUND:
-                    return;
+                    return false;
                 default:
-                    return;
+                    return false;
             }
         }
 
@@ -150,5 +150,6 @@ public class OpenWeatherJsonUtils {
             mDb.weatherDao().insertWeatherEntry(weatherEntry);
             Log.d(TAG, "Data Entry made");
         }
+        return true;
     }
 }

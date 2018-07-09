@@ -93,6 +93,27 @@ public class WeatherEntry {
         return time;
     }
 
+    public String getDecodedTime() {
+        String hour = time.split(":")[0];
+        String suffix;
+        int decodTime;
+        int decodHour = Integer.parseInt(hour);
+        if(decodHour > 12) {
+            decodTime = decodHour - 12;
+            suffix = "PM";
+        } else if (decodHour == 12) {
+            decodTime = decodHour;
+            suffix = "PM";
+        } else if (decodHour == 0) {
+            decodTime = 12;
+            suffix = "AM";
+        } else {
+            decodTime = decodHour;
+            suffix = "AM";
+        }
+        return String.valueOf(decodTime) + " " + suffix;
+    }
+
     public double getMinTemp() {
         return minTemp;
     }
