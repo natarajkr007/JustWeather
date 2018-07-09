@@ -3,6 +3,7 @@ package com.nataraj.android.justweather;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -20,10 +21,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nataraj.android.justweather.database.AppDatabase;
 import com.nataraj.android.justweather.sync.JustWeatherSyncTask;
+
+import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,6 +36,11 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
     private AppDatabase mDb;
+
+    private TextView cityTextView;
+
+    private SharedPreferences prefs;
+    private SharedPreferences.Editor prefEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,12 +69,21 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        }.execute();
 
+//        creating shared preference
+        prefs = getSharedPreferences(getString(R.string.shared_pref_name), MODE_PRIVATE);
+        if (!prefs.contains(getString(R.string.city_name))) {
+            setPrefs(getString(R.string.def_city));
+        }
+        final String init_city = prefs.getString(getString(R.string.city_name), getString(R.string.def_city));
+
+        cityTextView = findViewById(R.id.tv_city_name);
+        cityTextView.setText(init_city);
+
         AppExecutors.getInstance().networkIO().execute(new Runnable() {
             @Override
             public void run() {
                 Context context = getApplicationContext();
-//                TODO implement shared preferences here
-                JustWeatherSyncTask.syncWeather(context, mDb, "Kuppam");
+                JustWeatherSyncTask.syncWeather(context, mDb, init_city);
 
                 Log.d(TAG, "run: on UI Thread");
                 runOnUiThread(new Runnable() {
@@ -122,8 +140,20 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void setPrefs(String cityName) {
+        prefEdit = getSharedPreferences(getString(R.string.shared_pref_name), MODE_PRIVATE)
+                .edit();
+        prefEdit.putString(getString(R.string.units_key), getString(R.string.celcius));
+        prefEdit.putString(getString(R.string.city_name), cityName);
+        prefEdit.apply();
+    }
+
     public void setCity(final String location) {
         deleteData();
+        cityTextView.setText(location);
+
+        setPrefs(location);
+
         AppExecutors.getInstance().networkIO().execute(new Runnable() {
             @Override
             public void run() {
