@@ -2,6 +2,8 @@ package com.nataraj.android.justweather;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -68,8 +70,9 @@ public class FurtherForecastFragment extends Fragment {
 //                return null;
 //            }
 //        }.execute();
-        final LiveData<List<WeatherEntry>> weatherEntries = mDb.weatherDao().loadForecast();
-        weatherEntries.observe(getActivity(), new Observer<List<WeatherEntry>>() {
+        WeatherViewModel viewModel = ViewModelProviders.of(getActivity()).get(WeatherViewModel.class);
+//        final LiveData<List<WeatherEntry>> weatherEntries = mDb.weatherDao().loadForecast();
+        viewModel.getForecast().observe(getActivity(), new Observer<List<WeatherEntry>>() {
             @Override
             public void onChanged(@Nullable List<WeatherEntry> weatherEntries) {
                 mForecastAdapter.setTasks(weatherEntries);

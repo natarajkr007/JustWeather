@@ -3,6 +3,7 @@ package com.nataraj.android.justweather;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -33,7 +34,7 @@ public class TomorrowForecastFragment extends Fragment {
 
     private static final String TAG = TomorrowForecastFragment.class.getSimpleName();
 
-    private LiveData<List<WeatherEntry>> weatherEntries;
+//    private LiveData<List<WeatherEntry>> weatherEntries;
     private WeatherEntry tomorrowForecast;
     private AppDatabase mDb;
 
@@ -78,15 +79,16 @@ public class TomorrowForecastFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Date today = new Date();
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(today);
-        cal.add(Calendar.DATE, 1);
-        final Date tomorrow = cal.getTime();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String queryDate = dateFormat.format(tomorrow);
-        weatherEntries = mDb.weatherDao().loadForecastByDate(queryDate);
-        weatherEntries.observe(getActivity(), new Observer<List<WeatherEntry>>() {
+//        Date today = new Date();
+//        Calendar cal = Calendar.getInstance();
+//        cal.setTime(today);
+//        cal.add(Calendar.DATE, 1);
+//        final Date tomorrow = cal.getTime();
+//        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//        String queryDate = dateFormat.format(tomorrow);
+//        weatherEntries = mDb.weatherDao().loadForecastByDate(queryDate);
+        WeatherViewModel viewModel = ViewModelProviders.of(getActivity()).get(WeatherViewModel.class);
+        viewModel.getTomorrowForecast().observe(getActivity(), new Observer<List<WeatherEntry>>() {
             @Override
             public void onChanged(@Nullable List<WeatherEntry> weatherEntries) {
                 if (weatherEntries.size() > 0) {

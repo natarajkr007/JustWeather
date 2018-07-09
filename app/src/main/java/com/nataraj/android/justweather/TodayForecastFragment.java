@@ -3,6 +3,7 @@ package com.nataraj.android.justweather;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -29,7 +30,7 @@ public class TodayForecastFragment extends Fragment {
 
     private static final String TAG = TodayForecastFragment.class.getSimpleName();
 
-    private LiveData<List<WeatherEntry>> weatherEntries;
+//    private LiveData<List<WeatherEntry>> weatherEntries;
     private WeatherEntry presentForecast;
     private AppDatabase mDb;
 
@@ -74,8 +75,9 @@ public class TodayForecastFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        weatherEntries = mDb.weatherDao().loadForecastByDate("Today");
-        weatherEntries.observe(getActivity(), new Observer<List<WeatherEntry>>() {
+        WeatherViewModel viewModel = ViewModelProviders.of(getActivity()).get(WeatherViewModel.class);
+//        weatherEntries = mDb.weatherDao().loadForecastByDate("Today");
+        viewModel.getTodayForecast().observe(getActivity(), new Observer<List<WeatherEntry>>() {
             @Override
             public void onChanged(@Nullable List<WeatherEntry> weatherEntries) {
                 if (weatherEntries.size() > 0) {
