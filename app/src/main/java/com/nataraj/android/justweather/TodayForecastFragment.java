@@ -1,6 +1,7 @@
 package com.nataraj.android.justweather;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -81,11 +82,23 @@ public class TodayForecastFragment extends Fragment {
                     @Override
                     public void run() {
                         dateView.setText(presentForecast.getDate());
+
+                        String minTemp, maxTemp;
+
+                        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.shared_pref_name), getActivity().MODE_PRIVATE);
+                        if (preferences.getString(getString(R.string.units_key), getString(R.string.celcius)).equals(getString(R.string.celcius))) {
+                            minTemp = presentForecast.getMinTempC();
+                            maxTemp = presentForecast.getMaxTempC();
+                        } else {
+                            minTemp = presentForecast.getMinTempF();
+                            maxTemp = presentForecast.getMaxTempF();
+                        }
+
                         minMaxTempView.setText(
-                                "High " + Double.toString(presentForecast.getMaxTemp()) + "\u00b0\u2191 \u22c5 Low " +
-                                        Double.toString(presentForecast.getMinTemp()) + "\u00b0\u2193"
+                                "High " + maxTemp + "\u2191 \u22c5 Low " +
+                                        minTemp + "\u2193"
                         );
-                        nowTempView.setText(Double.toString(presentForecast.getMaxTemp()) + "\u00b0\u004b");
+                        nowTempView.setText(maxTemp);
                         weatherDescriptionView.setText(presentForecast.getWeatherDescription());
                         weatherIcon.setImageResource(WeatherIconUtils.getWeatherIconId(presentForecast.getWeatherIcon()));
 

@@ -1,6 +1,7 @@
 package com.nataraj.android.justweather;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,8 +41,20 @@ public class TodayForecastAdapter extends RecyclerView.Adapter<TodayForecastAdap
 
     @Override
     public void onBindViewHolder(WeatherViewHolder holder, int position) {
+        String minTemp, maxTemp;
+
         final WeatherEntry hourWeatherEntry = mHourWeatherEntries.get(position);
-        holder.hourTempView.setText(Double.toString(hourWeatherEntry.getMaxTemp()) + "\u00b0\u004b");
+
+        SharedPreferences preferences = mContext.getSharedPreferences(mContext.getString(R.string.shared_pref_name), mContext.MODE_PRIVATE);
+        if (preferences.getString(mContext.getString(R.string.units_key), mContext.getString(R.string.celcius)).equals(mContext.getString(R.string.celcius))) {
+            minTemp = hourWeatherEntry.getMinTempC();
+            maxTemp = hourWeatherEntry.getMaxTempC();
+        } else {
+            minTemp = hourWeatherEntry.getMinTempF();
+            maxTemp = hourWeatherEntry.getMaxTempF();
+        }
+
+        holder.hourTempView.setText(maxTemp);
         holder.hourTimeView.setText(hourWeatherEntry.getTime());
         holder.hourWeatherIcon.setImageResource(WeatherIconUtils.getWeatherIconId(hourWeatherEntry.getWeatherIcon()));
     }

@@ -101,12 +101,28 @@ public class WeatherEntry {
         return maxTemp;
     }
 
-    public double getMinTempC() {
-        return minTemp - 273.15;
+    public String getMinTempC() {
+        double temp = minTemp - 273.15;
+        String res = String.format("%.1f", temp) + "\u00b0\u0043";
+        return res;
     }
 
-    public double getMaxTempC() {
-        return maxTemp - 273.15;
+    public String getMaxTempC() {
+        double temp = maxTemp - 273.15;
+        String res = String.format("%.1f", temp) + "\u00b0\u0043";
+        return res;
+    }
+
+    public String getMinTempF() {
+        double temp = ((9 * minTemp) / 5) - 459.67;
+        String res = String.format("%.1f", temp) + "\u00b0\u0046";
+        return res;
+    }
+
+    public String getMaxTempF() {
+        double temp = ((9 * maxTemp) / 5) - 459.67;
+        String res = String.format("%.1f", temp) + "\u00b0\u0046";
+        return res;
     }
 
     public double getPressure() {

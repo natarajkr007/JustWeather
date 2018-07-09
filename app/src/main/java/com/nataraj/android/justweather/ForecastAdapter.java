@@ -1,6 +1,7 @@
 package com.nataraj.android.justweather;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,10 +41,21 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
     @Override
     public void onBindViewHolder(WeatherViewHolder holder, int position) {
         WeatherEntry weatherEntry = mWeatherEntries.get(position);
+
+        String minTemp, maxTemp;
+        SharedPreferences preferences = mContext.getSharedPreferences(mContext.getString(R.string.shared_pref_name), mContext.MODE_PRIVATE);
+        if (preferences.getString(mContext.getString(R.string.units_key), mContext.getString(R.string.celcius)).equals(mContext.getString(R.string.celcius))) {
+            minTemp = weatherEntry.getMinTempC();
+            maxTemp = weatherEntry.getMaxTempC();
+        } else {
+            minTemp = weatherEntry.getMinTempF();
+            maxTemp = weatherEntry.getMaxTempF();
+        }
+
         holder.dateView.setText(weatherEntry.getDate());
         holder.weatherDescriptionView.setText(weatherEntry.getWeatherDescription());
-        holder.maxTempView.setText(Double.toString(weatherEntry.getMaxTemp()) + "\u00b0\u004b");
-        holder.minTempView.setText(Double.toString(weatherEntry.getMinTemp()) + "\u00b0\u004b");
+        holder.maxTempView.setText(maxTemp);
+        holder.minTempView.setText(minTemp);
         holder.weatherDescriptionIconView.setImageResource(WeatherIconUtils.getWeatherIconId(weatherEntry.getWeatherIcon()));
     }
 

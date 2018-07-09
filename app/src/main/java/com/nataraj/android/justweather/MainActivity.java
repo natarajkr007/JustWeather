@@ -162,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
                 .edit();
         prefEdit.putString(getString(R.string.units_key), prefUnit);
         prefEdit.apply();
+        setViewPager();
     }
 
     public void setCity(final String location) {

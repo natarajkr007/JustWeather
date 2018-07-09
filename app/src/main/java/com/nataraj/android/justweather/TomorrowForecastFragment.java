@@ -1,6 +1,7 @@
 package com.nataraj.android.justweather;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -92,11 +93,23 @@ public class TomorrowForecastFragment extends Fragment {
                     @Override
                     public void run() {
                         dateView.setText("Tomorrow");
+
+                        String minTemp, maxTemp;
+
+                        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.shared_pref_name), getActivity().MODE_PRIVATE);
+                        if (preferences.getString(getString(R.string.units_key), getString(R.string.celcius)).equals(getString(R.string.celcius))) {
+                            minTemp = tomorrowForecast.getMinTempC();
+                            maxTemp = tomorrowForecast.getMaxTempC();
+                        } else {
+                            minTemp = tomorrowForecast.getMinTempF();
+                            maxTemp = tomorrowForecast.getMaxTempF();
+                        }
+
                         minMaxTempView.setText(
-                                "High " + Double.toString(tomorrowForecast.getMaxTemp()) + "\u00b0\u2191 \u22c5 Low " +
-                                        Double.toString(tomorrowForecast.getMinTemp()) + "\u00b0\u2193"
+                                "High " + maxTemp + "\u2191 \u22c5 Low " +
+                                        minTemp + "\u2193"
                         );
-                        tempView.setText(Double.toString(tomorrowForecast.getMaxTemp()) + "\u00b0\u004b");
+                        tempView.setText(maxTemp);
                         weatherDescriptionView.setText(tomorrowForecast.getWeatherDescription());
                         weatherIcon.setImageResource(WeatherIconUtils.getWeatherIconId(tomorrowForecast.getWeatherIcon()));
 
