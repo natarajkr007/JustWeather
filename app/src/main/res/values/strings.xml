@@ -11,8 +11,8 @@
     <string name="further_tab_title">5 days</string>
     <string name="shared_pref_name">JUST_WEATHER_PREFERENCES</string>
     <string name="units_key">metric</string>
-    <string name="celcius">c</string>
-    <string name="farenheit">f</string>
+    <string name="celcius">\u00b0 C</string>
+    <string name="farenheit">\u00b0 F</string>
     <string name="city_name">city</string>
     <string name="def_city">Kuppam</string>
 </resources>

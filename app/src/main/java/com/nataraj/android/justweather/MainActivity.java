@@ -96,11 +96,20 @@ public class MainActivity extends AppCompatActivity {
         });
 
         NavigationView navigationView = findViewById(R.id.nav_view);
+        if (prefs.getString(getString(R.string.units_key), getString(R.string.celcius)).equals(getString(R.string.celcius))) {
+            navigationView.setCheckedItem(R.id.pref_celcius);
+        } else {
+            navigationView.setCheckedItem(R.id.pref_farenheit);
+        }
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        item.setCheckable(false);
+                        if (item.getItemId() == R.id.pref_celcius) {
+                            setPrefUnit(getString(R.string.celcius));
+                        } else {
+                            setPrefUnit(getString(R.string.farenheit));
+                        }
                         mDrawerLayout.closeDrawers();
                         return true;
                     }
@@ -145,6 +154,13 @@ public class MainActivity extends AppCompatActivity {
                 .edit();
         prefEdit.putString(getString(R.string.units_key), getString(R.string.celcius));
         prefEdit.putString(getString(R.string.city_name), cityName);
+        prefEdit.apply();
+    }
+
+    private void setPrefUnit(String prefUnit) {
+        prefEdit = getSharedPreferences(getString(R.string.shared_pref_name), MODE_PRIVATE)
+                .edit();
+        prefEdit.putString(getString(R.string.units_key), prefUnit);
         prefEdit.apply();
     }
 
