@@ -1,8 +1,11 @@
 package com.nataraj.android.justweather;
 
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,7 +33,7 @@ public class TomorrowForecastFragment extends Fragment {
 
     private static final String TAG = TomorrowForecastFragment.class.getSimpleName();
 
-    private List<WeatherEntry> weatherEntries;
+    private LiveData<List<WeatherEntry>> weatherEntries;
     private WeatherEntry tomorrowForecast;
     private AppDatabase mDb;
 
@@ -75,53 +78,126 @@ public class TomorrowForecastFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+        Date today = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(today);
+        cal.add(Calendar.DATE, 1);
+        final Date tomorrow = cal.getTime();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String queryDate = dateFormat.format(tomorrow);
+        weatherEntries = mDb.weatherDao().loadForecastByDate(queryDate);
+        weatherEntries.observe(getActivity(), new Observer<List<WeatherEntry>>() {
             @Override
-            public void run() {
-                Date today = new Date();
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(today);
-                cal.add(Calendar.DATE, 1);
-                final Date tomorrow = cal.getTime();
-                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                String queryDate = dateFormat.format(tomorrow);
-                weatherEntries = mDb.weatherDao().loadForecastByDate(queryDate);
+            public void onChanged(@Nullable List<WeatherEntry> weatherEntries) {
                 if (weatherEntries.size() > 0) {
                     tomorrowForecast = weatherEntries.get(0);
                 } else {
                     return;
                 }
+                dateView.setText("Tomorrow");
 
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        dateView.setText("Tomorrow");
+                String minTemp, maxTemp;
 
-                        String minTemp, maxTemp;
+                SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.shared_pref_name), getActivity().MODE_PRIVATE);
+                if (preferences.getString(getString(R.string.units_key), getString(R.string.celcius)).equals(getString(R.string.celcius))) {
+                    minTemp = tomorrowForecast.getMinTempC();
+                    maxTemp = tomorrowForecast.getMaxTempC();
+                } else {
+                    minTemp = tomorrowForecast.getMinTempF();
+                    maxTemp = tomorrowForecast.getMaxTempF();
+                }
 
-                        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.shared_pref_name), getActivity().MODE_PRIVATE);
-                        if (preferences.getString(getString(R.string.units_key), getString(R.string.celcius)).equals(getString(R.string.celcius))) {
-                            minTemp = tomorrowForecast.getMinTempC();
-                            maxTemp = tomorrowForecast.getMaxTempC();
-                        } else {
-                            minTemp = tomorrowForecast.getMinTempF();
-                            maxTemp = tomorrowForecast.getMaxTempF();
-                        }
+                minMaxTempView.setText(
+                        "High " + maxTemp + "\u2191 \u22c5 Low " +
+                                minTemp + "\u2193"
+                );
+                tempView.setText(maxTemp);
+                weatherDescriptionView.setText(tomorrowForecast.getWeatherDescription());
+                weatherIcon.setImageResource(WeatherIconUtils.getWeatherIconId(tomorrowForecast.getWeatherIcon()));
 
-                        minMaxTempView.setText(
-                                "High " + maxTemp + "\u2191 \u22c5 Low " +
-                                        minTemp + "\u2193"
-                        );
-                        tempView.setText(maxTemp);
-                        weatherDescriptionView.setText(tomorrowForecast.getWeatherDescription());
-                        weatherIcon.setImageResource(WeatherIconUtils.getWeatherIconId(tomorrowForecast.getWeatherIcon()));
-
-                        mTodayForecastAdapter.setTasks(weatherEntries);
-                        mTodayForecastAdapter.notifyDataSetChanged();
-                    }
-                });
+                mTodayForecastAdapter.setTasks(weatherEntries);
+                mTodayForecastAdapter.notifyDataSetChanged();
             }
         });
+//        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                Date today = new Date();
+//                Calendar cal = Calendar.getInstance();
+//                cal.setTime(today);
+//                cal.add(Calendar.DATE, 1);
+//                final Date tomorrow = cal.getTime();
+//                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//                String queryDate = dateFormat.format(tomorrow);
+//                weatherEntries = mDb.weatherDao().loadForecastByDate(queryDate);
+//                weatherEntries.observe(getActivity(), new Observer<List<WeatherEntry>>() {
+//                    @Override
+//                    public void onChanged(@Nullable List<WeatherEntry> weatherEntries) {
+//                        if (weatherEntries.size() > 0) {
+//                            tomorrowForecast = weatherEntries.get(0);
+//                        } else {
+//                            return;
+//                        }
+//                        dateView.setText("Tomorrow");
+//
+//                        String minTemp, maxTemp;
+//
+//                        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.shared_pref_name), getActivity().MODE_PRIVATE);
+//                        if (preferences.getString(getString(R.string.units_key), getString(R.string.celcius)).equals(getString(R.string.celcius))) {
+//                            minTemp = tomorrowForecast.getMinTempC();
+//                            maxTemp = tomorrowForecast.getMaxTempC();
+//                        } else {
+//                            minTemp = tomorrowForecast.getMinTempF();
+//                            maxTemp = tomorrowForecast.getMaxTempF();
+//                        }
+//
+//                        minMaxTempView.setText(
+//                                "High " + maxTemp + "\u2191 \u22c5 Low " +
+//                                        minTemp + "\u2193"
+//                        );
+//                        tempView.setText(maxTemp);
+//                        weatherDescriptionView.setText(tomorrowForecast.getWeatherDescription());
+//                        weatherIcon.setImageResource(WeatherIconUtils.getWeatherIconId(tomorrowForecast.getWeatherIcon()));
+//
+//                        mTodayForecastAdapter.setTasks(weatherEntries);
+//                        mTodayForecastAdapter.notifyDataSetChanged();
+//                    }
+//                });
+//                if (weatherEntries.size() > 0) {
+//                    tomorrowForecast = weatherEntries.get(0);
+//                } else {
+//                    return;
+//                }
+//
+//                getActivity().runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        dateView.setText("Tomorrow");
+//
+//                        String minTemp, maxTemp;
+//
+//                        SharedPreferences preferences = getActivity().getSharedPreferences(getString(R.string.shared_pref_name), getActivity().MODE_PRIVATE);
+//                        if (preferences.getString(getString(R.string.units_key), getString(R.string.celcius)).equals(getString(R.string.celcius))) {
+//                            minTemp = tomorrowForecast.getMinTempC();
+//                            maxTemp = tomorrowForecast.getMaxTempC();
+//                        } else {
+//                            minTemp = tomorrowForecast.getMinTempF();
+//                            maxTemp = tomorrowForecast.getMaxTempF();
+//                        }
+//
+//                        minMaxTempView.setText(
+//                                "High " + maxTemp + "\u2191 \u22c5 Low " +
+//                                        minTemp + "\u2193"
+//                        );
+//                        tempView.setText(maxTemp);
+//                        weatherDescriptionView.setText(tomorrowForecast.getWeatherDescription());
+//                        weatherIcon.setImageResource(WeatherIconUtils.getWeatherIconId(tomorrowForecast.getWeatherIcon()));
+//
+//                        mTodayForecastAdapter.setTasks(weatherEntries);
+//                        mTodayForecastAdapter.notifyDataSetChanged();
+//                    }
+//                });
+//            }
+//        });
     }
 }

@@ -186,7 +186,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if (res) {
-                            setViewPager();
+//                            setViewPager();
+                            return;
                         } else {
                             Toast.makeText(context, "City not found", Toast.LENGTH_SHORT).show();
                             Toast.makeText(context, "Please, change the city", Toast.LENGTH_SHORT).show();

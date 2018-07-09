@@ -1,8 +1,11 @@
 package com.nataraj.android.justweather;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -65,19 +68,32 @@ public class FurtherForecastFragment extends Fragment {
 //                return null;
 //            }
 //        }.execute();
-
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+        final LiveData<List<WeatherEntry>> weatherEntries = mDb.weatherDao().loadForecast();
+        weatherEntries.observe(getActivity(), new Observer<List<WeatherEntry>>() {
             @Override
-            public void run() {
-                final List<WeatherEntry> weatherEntries = mDb.weatherDao().loadForecast();
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mForecastAdapter.setTasks(weatherEntries);
-                        mForecastAdapter.notifyDataSetChanged();
-                    }
-                });
+            public void onChanged(@Nullable List<WeatherEntry> weatherEntries) {
+                mForecastAdapter.setTasks(weatherEntries);
+                mForecastAdapter.notifyDataSetChanged();
             }
         });
+//        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                final LiveData<List<WeatherEntry>> weatherEntries = mDb.weatherDao().loadForecast();
+//                weatherEntries.observe(getActivity(), new Observer<List<WeatherEntry>>() {
+//                    @Override
+//                    public void onChanged(@Nullable List<WeatherEntry> weatherEntries) {
+//                        mForecastAdapter.setTasks(weatherEntries);
+//                    }
+//                });
+//                getActivity().runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        mForecastAdapter.setTasks(weatherEntries);
+//                        mForecastAdapter.notifyDataSetChanged();
+//                    }
+//                });
+//            }
+//        });
     }
 }
