@@ -3,6 +3,7 @@ package com.nataraj.android.justweather;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,7 +76,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
         mWeatherEntries = weatherEntries;
     }
 
-    class WeatherViewHolder extends RecyclerView.ViewHolder {
+    class WeatherViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView dateView;
         TextView weatherDescriptionView;
@@ -88,6 +89,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
 
         public WeatherViewHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
 
             dateView = itemView.findViewById(R.id.date);
             weatherDescriptionView = itemView.findViewById(R.id.weather_description);
@@ -98,6 +100,16 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
             humidityView = itemView.findViewById(R.id.tv_humidity_val);
             pressureView = itemView.findViewById(R.id.tv_pressure_val);
             windView = itemView.findViewById(R.id.tv_wind_val);
+        }
+
+        @Override
+        public void onClick(View view) {
+            Log.d(TAG, "onClick: clicked " + view.getId());
+            if (view.findViewById(R.id.forecast_list_rem_detail).getVisibility() == View.GONE) {
+                view.findViewById(R.id.forecast_list_rem_detail).setVisibility(View.VISIBLE);
+            } else {
+                view.findViewById(R.id.forecast_list_rem_detail).setVisibility(View.GONE);
+            }
         }
     }
 }
