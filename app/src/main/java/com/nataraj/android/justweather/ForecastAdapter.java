@@ -52,11 +52,14 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
             maxTemp = weatherEntry.getMaxTempF();
         }
 
-        holder.dateView.setText(weatherEntry.getDate());
+        holder.dateView.setText(weatherEntry.getDate() + " " + weatherEntry.getDecodedTime());
         holder.weatherDescriptionView.setText(weatherEntry.getWeatherDescription());
         holder.maxTempView.setText(maxTemp);
         holder.minTempView.setText(minTemp);
         holder.weatherDescriptionIconView.setImageResource(WeatherIconUtils.getWeatherIconId(weatherEntry.getWeatherIcon()));
+        holder.humidityView.setText(String.valueOf(weatherEntry.getHumidity()) + "%");
+        holder.pressureView.setText(String.valueOf(weatherEntry.getPressure()) + " hPa");
+        holder.windView.setText(String.valueOf(weatherEntry.getWindSpeed()) + "km/h " + weatherEntry.getWindDirection());
     }
 
     @Override
@@ -79,6 +82,9 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
         TextView maxTempView;
         TextView minTempView;
         ImageView weatherDescriptionIconView;
+        TextView humidityView;
+        TextView pressureView;
+        TextView windView;
 
         public WeatherViewHolder(View itemView) {
             super(itemView);
@@ -88,6 +94,10 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
             maxTempView = itemView.findViewById(R.id.max_temp);
             minTempView = itemView.findViewById(R.id.min_temp);
             weatherDescriptionIconView = itemView.findViewById(R.id.weather_description_icon);
+
+            humidityView = itemView.findViewById(R.id.tv_humidity_val);
+            pressureView = itemView.findViewById(R.id.tv_pressure_val);
+            windView = itemView.findViewById(R.id.tv_wind_val);
         }
     }
 }

@@ -43,6 +43,9 @@ public class TomorrowForecastFragment extends Fragment {
     private TextView tempView;
     private TextView weatherDescriptionView;
     private ImageView weatherIcon;
+    private TextView humidityView;
+    private TextView pressureView;
+    private TextView windView;
 
     private RecyclerView mHourForecastRecyclerView;
     private TodayForecastAdapter mTodayForecastAdapter;
@@ -63,6 +66,9 @@ public class TomorrowForecastFragment extends Fragment {
         tempView = rootView.findViewById(R.id.curr_temp);
         weatherDescriptionView = rootView.findViewById(R.id.curr_weather_description);
         weatherIcon = rootView.findViewById(R.id.weather_icon);
+        humidityView = rootView.findViewById(R.id.tv_humidity_val);
+        pressureView = rootView.findViewById(R.id.tv_pressure_val);
+        windView = rootView.findViewById(R.id.tv_wind_val);
 
         mHourForecastRecyclerView = rootView.findViewById(R.id.hour_forecast_recyclerview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -116,6 +122,9 @@ public class TomorrowForecastFragment extends Fragment {
                 tempView.setText(maxTemp);
                 weatherDescriptionView.setText(tomorrowForecast.getWeatherDescription());
                 weatherIcon.setImageResource(WeatherIconUtils.getWeatherIconId(tomorrowForecast.getWeatherIcon()));
+                humidityView.setText(String.valueOf(tomorrowForecast.getHumidity()) + "%");
+                pressureView.setText(String.valueOf(tomorrowForecast.getPressure()) + " hPa");
+                windView.setText(String.valueOf(tomorrowForecast.getWindSpeed()) + "km/h" + " " + tomorrowForecast.getWindDirection());
 
                 mTodayForecastAdapter.setTasks(weatherEntries);
                 mTodayForecastAdapter.notifyDataSetChanged();

@@ -3,6 +3,7 @@ package com.nataraj.android.justweather.database;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Index;
+import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.PrimaryKey;
 
 import java.text.SimpleDateFormat;
@@ -172,6 +173,28 @@ public class WeatherEntry {
 
     public double getWindDeg() {
         return windDeg;
+    }
+
+    public String getWindDirection() {
+        String direction = "Unknown";
+        if (windDeg >= 337.5 || windDeg < 22.5) {
+            direction = "N";
+        } else if (windDeg >= 22.5 && windDeg < 67.5) {
+            direction = "NE";
+        } else if (windDeg >= 67.5 && windDeg < 112.5) {
+            direction = "E";
+        } else if (windDeg >= 112.5 && windDeg < 157.5) {
+            direction = "SE";
+        } else if (windDeg >= 157.5 && windDeg < 202.5) {
+            direction = "S";
+        } else if (windDeg >= 202.5 && windDeg < 247.5) {
+            direction = "SW";
+        } else if (windDeg >= 247.5 && windDeg < 292.5) {
+            direction = "W";
+        } else if (windDeg >= 292.5 && windDeg < 337.5) {
+            direction = "NW";
+        }
+        return direction;
     }
 
     public double getRain3h() {

@@ -1,6 +1,7 @@
 package com.nataraj.android.justweather;
 
 import android.app.SearchManager;
+import android.arch.lifecycle.ViewModel;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        instantiating db instance
         mDb = AppDatabase.getsInstance(getApplicationContext());
+        deleteData();
 
         //        test: to check the data
 //        new AsyncTask<Void, Void, Void>() {
@@ -222,13 +224,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    protected void onDestroy() {
-        Log.d(TAG, "onDestroy: Gotta nuke Data... Yeah");
-        deleteData();
-        super.onDestroy();
-    }
-
     protected void deleteData() {
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
@@ -236,5 +231,6 @@ public class MainActivity extends AppCompatActivity {
                 mDb.weatherDao().nukeData();
             }
         });
+        Log.d(TAG, "Data nuked");
     }
 }

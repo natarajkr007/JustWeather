@@ -21,6 +21,8 @@ import com.nataraj.android.justweather.database.AppDatabase;
 import com.nataraj.android.justweather.database.WeatherEntry;
 import com.nataraj.android.justweather.utilities.WeatherIconUtils;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 /**
@@ -39,6 +41,9 @@ public class TodayForecastFragment extends Fragment {
     private TextView nowTempView;
     private TextView weatherDescriptionView;
     private ImageView weatherIcon;
+    private TextView humidityView;
+    private TextView pressureView;
+    private TextView windView;
 
     private RecyclerView mHourForecastRecyclerView;
     private TodayForecastAdapter mTodayForecastAdapter;
@@ -59,6 +64,9 @@ public class TodayForecastFragment extends Fragment {
         nowTempView = rootView.findViewById(R.id.curr_temp);
         weatherDescriptionView = rootView.findViewById(R.id.curr_weather_description);
         weatherIcon = rootView.findViewById(R.id.weather_icon);
+        humidityView = rootView.findViewById(R.id.tv_humidity_val);
+        pressureView = rootView.findViewById(R.id.tv_pressure_val);
+        windView = rootView.findViewById(R.id.tv_wind_val);
 
         mHourForecastRecyclerView = rootView.findViewById(R.id.hour_forecast_recyclerview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -105,6 +113,9 @@ public class TodayForecastFragment extends Fragment {
                 nowTempView.setText(maxTemp);
                 weatherDescriptionView.setText(presentForecast.getWeatherDescription());
                 weatherIcon.setImageResource(WeatherIconUtils.getWeatherIconId(presentForecast.getWeatherIcon()));
+                humidityView.setText(String.valueOf(presentForecast.getHumidity()) + "%");
+                pressureView.setText(String.valueOf(presentForecast.getPressure()) + " hPa");
+                windView.setText(String.valueOf(presentForecast.getWindSpeed()) + "km/h" + " " + presentForecast.getWindDirection());
 
                 mTodayForecastAdapter.setTasks(weatherEntries);
                 mTodayForecastAdapter.notifyDataSetChanged();

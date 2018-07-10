@@ -3,6 +3,7 @@ package com.nataraj.android.justweather;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +72,7 @@ public class TodayForecastAdapter extends RecyclerView.Adapter<TodayForecastAdap
         mHourWeatherEntries = hourWeatherEntries;
     }
 
-    class WeatherViewHolder extends RecyclerView.ViewHolder {
+    class WeatherViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView hourTempView;
         ImageView hourWeatherIcon;
@@ -83,6 +84,12 @@ public class TodayForecastAdapter extends RecyclerView.Adapter<TodayForecastAdap
             hourTempView = itemView.findViewById(R.id.hour_temp);
             hourWeatherIcon = itemView.findViewById(R.id.hour_weather_icon);
             hourTimeView = itemView.findViewById(R.id.hour_time);
+        }
+
+        @Override
+        public void onClick(View view) {
+            Log.d(TAG, "onClick: clicked");
+            view.setVisibility(View.GONE);
         }
     }
 }
