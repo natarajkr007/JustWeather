@@ -3,6 +3,7 @@ package com.nataraj.android.justweather;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
 
     private List<WeatherEntry> mWeatherEntries;
     private Context mContext;
+    private int mExpandedPosition = -1;
 
     public ForecastAdapter(Context context) {
         mContext = context;
@@ -40,7 +42,10 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
     }
 
     @Override
-    public void onBindViewHolder(WeatherViewHolder holder, int position) {
+    public void onBindViewHolder(WeatherViewHolder holder, final int position) {
+
+        final boolean isExpanded = position == mExpandedPosition;
+
         WeatherEntry weatherEntry = mWeatherEntries.get(position);
 
         String minTemp, maxTemp;
@@ -61,6 +66,15 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
         holder.humidityView.setText(String.valueOf(weatherEntry.getHumidity()) + "%");
         holder.pressureView.setText(String.valueOf(weatherEntry.getPressure()) + " hPa");
         holder.windView.setText(String.valueOf(weatherEntry.getWindSpeed()) + "km/h " + weatherEntry.getWindDirection());
+        holder.extraDetails.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+        holder.itemView.setActivated(isExpanded);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mExpandedPosition = isExpanded ? -1 : position;
+                notifyItemChanged(position);
+            }
+        });
     }
 
     @Override
@@ -76,7 +90,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
         mWeatherEntries = weatherEntries;
     }
 
-    class WeatherViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class WeatherViewHolder extends RecyclerView.ViewHolder {
 
         TextView dateView;
         TextView weatherDescriptionView;
@@ -87,9 +101,10 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
         TextView pressureView;
         TextView windView;
 
+        View extraDetails;
+
         public WeatherViewHolder(View itemView) {
             super(itemView);
-            itemView.setOnClickListener(this);
 
             dateView = itemView.findViewById(R.id.date);
             weatherDescriptionView = itemView.findViewById(R.id.weather_description);
@@ -100,16 +115,8 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
             humidityView = itemView.findViewById(R.id.tv_humidity_val);
             pressureView = itemView.findViewById(R.id.tv_pressure_val);
             windView = itemView.findViewById(R.id.tv_wind_val);
-        }
 
-        @Override
-        public void onClick(View view) {
-            Log.d(TAG, "onClick: clicked " + view.getId());
-            if (view.findViewById(R.id.forecast_list_rem_detail).getVisibility() == View.GONE) {
-                view.findViewById(R.id.forecast_list_rem_detail).setVisibility(View.VISIBLE);
-            } else {
-                view.findViewById(R.id.forecast_list_rem_detail).setVisibility(View.GONE);
-            }
+            extraDetails = itemView.findViewById(R.id.forecast_list_rem_detail);
         }
     }
 }
