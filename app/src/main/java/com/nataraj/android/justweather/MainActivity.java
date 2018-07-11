@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModel;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -22,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,12 +41,16 @@ public class MainActivity extends AppCompatActivity {
     private AppDatabase mDb;
 
     private TextView cityTextView;
+    private ViewPager mViewPager;
+    private ProgressBar mProgressBar;
+    private TextView mWarnTextView;
 
     private SharedPreferences prefs;
     private SharedPreferences.Editor prefEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate: orientation Changed");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -80,6 +86,9 @@ public class MainActivity extends AppCompatActivity {
 
         cityTextView = findViewById(R.id.tv_city_name);
         cityTextView.setText(init_city);
+        mProgressBar = findViewById(R.id.progress_bar);
+        mViewPager = findViewById(R.id.weather_view_pager);
+        mWarnTextView = findViewById(R.id.tv_warn);
 
         AppExecutors.getInstance().networkIO().execute(new Runnable() {
             @Override
@@ -91,9 +100,13 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        setViewPager();
                         if (res) {
-                            setViewPager();
+                            mProgressBar.setVisibility(View.GONE);
+                            mViewPager.setVisibility(View.VISIBLE);
                         } else {
+                            mProgressBar.setVisibility(View.GONE);
+                            mWarnTextView.setVisibility(View.VISIBLE);
                             Toast.makeText(context, "City not found", Toast.LENGTH_SHORT).show();
                             Toast.makeText(context, "Please, change the city", Toast.LENGTH_SHORT).show();
                         }
@@ -136,14 +149,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void setViewPager() {
 //        ViewPager setup for horizontal swiping tabs
-        ViewPager viewPager = findViewById(R.id.weather_view_pager);
         ForecastPagerAdapter forecastPagerAdapter =
                 new ForecastPagerAdapter(getSupportFragmentManager(), this);
-        viewPager.setAdapter(forecastPagerAdapter);
+        mViewPager.setAdapter(forecastPagerAdapter);
 
 //        tab layout setup
         TabLayout tabLayout = findViewById(R.id.forecast_tabs);
-        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setupWithViewPager(mViewPager);
     }
 
     @Override
@@ -173,6 +185,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setCity(final String location) {
+        mProgressBar.setVisibility(View.VISIBLE);
+        mViewPager.setVisibility(View.GONE);
         deleteData();
         cityTextView.setText(location);
 
@@ -188,9 +202,13 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if (res) {
-//                            setViewPager();
+//                            setViewPager(); used ViewModel to update changed data
+                            mProgressBar.setVisibility(View.GONE);
+                            mViewPager.setVisibility(View.VISIBLE);
                             return;
                         } else {
+                            mProgressBar.setVisibility(View.GONE);
+                            mWarnTextView.setVisibility(View.VISIBLE);
                             Toast.makeText(context, "City not found", Toast.LENGTH_SHORT).show();
                             Toast.makeText(context, "Please, change the city", Toast.LENGTH_SHORT).show();
                         }
