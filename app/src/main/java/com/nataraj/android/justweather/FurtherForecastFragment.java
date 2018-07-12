@@ -32,7 +32,7 @@ public class FurtherForecastFragment extends Fragment {
     private ForecastAdapter mForecastAdapter;
     private AppDatabase mDb;
     private HashMap<String, DaySummary> daySummaryEntries;
-    private String[] days = new String[5];
+    private String[] days = new String[6];
 
     public FurtherForecastFragment() {
         // empty constructor required
