@@ -45,7 +45,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
     }
 
     @Override
-    public void onBindViewHolder(WeatherViewHolder holder, final int position) {
+    public void onBindViewHolder(final WeatherViewHolder holder, final int position) {
 
         final boolean isExpanded = position == mExpandedPosition;
 
