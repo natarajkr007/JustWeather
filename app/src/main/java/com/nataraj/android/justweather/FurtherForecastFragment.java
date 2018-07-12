@@ -20,6 +20,8 @@ import android.view.ViewGroup;
 import com.nataraj.android.justweather.database.AppDatabase;
 import com.nataraj.android.justweather.database.WeatherEntry;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class FurtherForecastFragment extends Fragment {
@@ -29,6 +31,7 @@ public class FurtherForecastFragment extends Fragment {
     private RecyclerView mForecastRecyclerView;
     private ForecastAdapter mForecastAdapter;
     private AppDatabase mDb;
+    private HashMap<String, DaySummary> daySummaryEntries;
 
     public FurtherForecastFragment() {
         // empty constructor required
@@ -38,6 +41,7 @@ public class FurtherForecastFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         Log.d(TAG, "onCreateView: FurtherForecastFragment");
+        daySummaryEntries = new HashMap<>();
 
         View rootView = inflater.inflate(R.layout.forecast_recycler_view, container, false);
 
@@ -75,10 +79,12 @@ public class FurtherForecastFragment extends Fragment {
         viewModel.getForecast().observe(getActivity(), new Observer<List<WeatherEntry>>() {
             @Override
             public void onChanged(@Nullable List<WeatherEntry> weatherEntries) {
+                makeDayWiseWeatherForecast(weatherEntries);
                 mForecastAdapter.setTasks(weatherEntries);
                 mForecastAdapter.notifyDataSetChanged();
             }
         });
+
 //        AppExecutors.getInstance().diskIO().execute(new Runnable() {
 //            @Override
 //            public void run() {
@@ -98,5 +104,52 @@ public class FurtherForecastFragment extends Fragment {
 //                });
 //            }
 //        });
+    }
+
+    public void makeDayWiseWeatherForecast(List<WeatherEntry> weatherEntries) {
+        for (WeatherEntry weatherEntry: weatherEntries) {
+            if (!daySummaryEntries.containsKey(weatherEntry.getDate())) {
+                DaySummary daySummary = new DaySummary();
+
+                daySummary.minTemp = weatherEntry.getMinTemp();
+                daySummary.minTempC = weatherEntry.getMinTempC();
+                daySummary.minTempF = weatherEntry.getMinTempF();
+                daySummary.maxTemp = weatherEntry.getMaxTemp();
+                daySummary.maxTempC = weatherEntry.getMaxTempC();
+                daySummary.maxTempF = weatherEntry.getMaxTempF();
+                daySummary.humidity = weatherEntry.getHumidity();
+                daySummary.pressure = weatherEntry.getPressure();
+                daySummary.hourWeather.add(weatherEntry);
+
+                daySummaryEntries.put(weatherEntry.getDate(), daySummary);
+            } else {
+                DaySummary daySummary = daySummaryEntries.get(weatherEntry.getDate());
+                if (daySummary.minTemp > weatherEntry.getMinTemp()) {
+                    daySummary.minTemp = weatherEntry.getMinTemp();
+                    daySummary.minTempC = weatherEntry.getMinTempC();
+                    daySummary.minTempF = weatherEntry.getMinTempF();
+                }
+                if (daySummary.maxTemp < weatherEntry.getMaxTemp()) {
+                    daySummary.maxTemp = weatherEntry.getMaxTemp();
+                    daySummary.maxTempC = weatherEntry.getMaxTempC();
+                    daySummary.maxTempF = weatherEntry.getMaxTempF();
+                }
+                daySummary.humidity = Math.max(daySummary.humidity, weatherEntry.getHumidity());
+                daySummary.pressure = Math.max(daySummary.pressure, weatherEntry.getPressure());
+                daySummary.hourWeather.add(weatherEntry);
+            }
+        }
+    }
+
+    class DaySummary {
+        double minTemp;
+        double maxTemp;
+        String minTempC;
+        String maxTempC;
+        String minTempF;
+        String maxTempF;
+        double humidity;
+        double pressure;
+        List<WeatherEntry> hourWeather = new ArrayList<>();
     }
 }
