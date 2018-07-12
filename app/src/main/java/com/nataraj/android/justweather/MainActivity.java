@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
     private void setPrefs(String cityName) {
         prefEdit = getSharedPreferences(getString(R.string.shared_pref_name), MODE_PRIVATE)
                 .edit();
-        prefEdit.putString(getString(R.string.units_key), getString(R.string.celcius));
+//        prefEdit.putString(getString(R.string.units_key), getString(R.string.celcius));
         prefEdit.putString(getString(R.string.city_name), cityName);
         prefEdit.apply();
     }

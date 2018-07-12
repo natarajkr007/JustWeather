@@ -78,7 +78,8 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/hour_forecast_recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="18dp" />
 
     <include
         android:id="@+id/other_detail"

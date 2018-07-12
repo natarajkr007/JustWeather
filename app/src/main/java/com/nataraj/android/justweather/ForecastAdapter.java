@@ -26,7 +26,6 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
     
     private static final String TAG = ForecastAdapter.class.getSimpleName();
 
-    private List<WeatherEntry> mWeatherEntries;
     private HashMap<String, FurtherForecastFragment.DaySummary> mDaySummaryEntries;
     private String[] mDays;
     private Context mContext;
@@ -98,8 +97,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
         return mDaySummaryEntries.size();
     }
 
-    public void setTasks(List<WeatherEntry> weatherEntries, HashMap<String, FurtherForecastFragment.DaySummary> daySummaryEntries, String[] days) {
-        mWeatherEntries = weatherEntries;
+    public void setTasks(HashMap<String, FurtherForecastFragment.DaySummary> daySummaryEntries, String[] days) {
         mDaySummaryEntries = daySummaryEntries;
         mDays = days;
     }

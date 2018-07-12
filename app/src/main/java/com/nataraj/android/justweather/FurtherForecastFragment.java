@@ -80,8 +80,9 @@ public class FurtherForecastFragment extends Fragment {
         viewModel.getForecast().observe(getActivity(), new Observer<List<WeatherEntry>>() {
             @Override
             public void onChanged(@Nullable List<WeatherEntry> weatherEntries) {
+                daySummaryEntries.clear();
                 makeDayWiseWeatherForecast(weatherEntries);
-                mForecastAdapter.setTasks(weatherEntries, daySummaryEntries, days);
+                mForecastAdapter.setTasks(daySummaryEntries, days);
                 mForecastAdapter.notifyDataSetChanged();
             }
         });
