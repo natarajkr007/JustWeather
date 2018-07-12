@@ -2,6 +2,7 @@ package com.nataraj.android.justweather;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.util.Log;
@@ -70,6 +71,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
         holder.pressureView.setText(String.valueOf(daySummary.pressure) + " hPa");
         holder.windView.setText(String.valueOf(daySummary.windSpeed) + "km/h " + daySummary.windDirection);
         holder.extraDetails.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+        holder.hourRecyclerView.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
         holder.itemView.setActivated(isExpanded);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,6 +80,13 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
                 notifyItemChanged(position);
             }
         });
+
+        TodayForecastAdapter todayForecastAdapter = new TodayForecastAdapter(mContext);
+        holder.hourRecyclerView.setAdapter(todayForecastAdapter);
+        holder.hourRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+        holder.hourRecyclerView.setLayoutManager(linearLayoutManager);
+        todayForecastAdapter.setTasks(daySummary.hourWeather);
     }
 
     @Override
@@ -107,6 +116,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
         TextView windView;
 
         View extraDetails;
+        RecyclerView hourRecyclerView;
 
         public WeatherViewHolder(View itemView) {
             super(itemView);
@@ -122,6 +132,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
             windView = itemView.findViewById(R.id.tv_wind_val);
 
             extraDetails = itemView.findViewById(R.id.forecast_list_rem_detail);
+            hourRecyclerView = itemView.findViewById(R.id.rv_hour_entry);
         }
     }
 }
