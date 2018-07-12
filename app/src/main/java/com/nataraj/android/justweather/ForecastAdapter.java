@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.nataraj.android.justweather.database.WeatherEntry;
 import com.nataraj.android.justweather.utilities.WeatherIconUtils;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -25,6 +26,8 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
     private static final String TAG = ForecastAdapter.class.getSimpleName();
 
     private List<WeatherEntry> mWeatherEntries;
+    private HashMap<String, FurtherForecastFragment.DaySummary> mDaySummaryEntries;
+    private String[] mDays;
     private Context mContext;
     private int mExpandedPosition = -1;
 
@@ -46,26 +49,26 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
 
         final boolean isExpanded = position == mExpandedPosition;
 
-        WeatherEntry weatherEntry = mWeatherEntries.get(position);
+        FurtherForecastFragment.DaySummary daySummary = mDaySummaryEntries.get(mDays[position]);
 
         String minTemp, maxTemp;
         SharedPreferences preferences = mContext.getSharedPreferences(mContext.getString(R.string.shared_pref_name), mContext.MODE_PRIVATE);
         if (preferences.getString(mContext.getString(R.string.units_key), mContext.getString(R.string.celcius)).equals(mContext.getString(R.string.celcius))) {
-            minTemp = weatherEntry.getMinTempC();
-            maxTemp = weatherEntry.getMaxTempC();
+            minTemp = daySummary.minTempC;
+            maxTemp = daySummary.maxTempC;
         } else {
-            minTemp = weatherEntry.getMinTempF();
-            maxTemp = weatherEntry.getMaxTempF();
+            minTemp = daySummary.minTempF;
+            maxTemp = daySummary.maxTempF;
         }
 
-        holder.dateView.setText(weatherEntry.getDate() + " " + weatherEntry.getDecodedTime());
-        holder.weatherDescriptionView.setText(weatherEntry.getWeatherDescription());
+        holder.dateView.setText(mDays[position]);
+        holder.weatherDescriptionView.setText(daySummary.weatherDescription);
         holder.maxTempView.setText(maxTemp);
         holder.minTempView.setText(minTemp);
-        holder.weatherDescriptionIconView.setImageResource(WeatherIconUtils.getWeatherIconId(weatherEntry.getWeatherIcon()));
-        holder.humidityView.setText(String.valueOf(weatherEntry.getHumidity()) + "%");
-        holder.pressureView.setText(String.valueOf(weatherEntry.getPressure()) + " hPa");
-        holder.windView.setText(String.valueOf(weatherEntry.getWindSpeed()) + "km/h " + weatherEntry.getWindDirection());
+        holder.weatherDescriptionIconView.setImageResource(WeatherIconUtils.getWeatherIconId(daySummary.weatherIcon));
+        holder.humidityView.setText(String.valueOf(daySummary.humidity) + "%");
+        holder.pressureView.setText(String.valueOf(daySummary.pressure) + " hPa");
+        holder.windView.setText(String.valueOf(daySummary.windSpeed) + "km/h " + daySummary.windDirection);
         holder.extraDetails.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
         holder.itemView.setActivated(isExpanded);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -79,15 +82,17 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Weathe
 
     @Override
     public int getItemCount() {
-        if (mWeatherEntries == null) {
+        if (mDaySummaryEntries == null) {
             return 0;
         }
 
-        return mWeatherEntries.size();
+        return mDaySummaryEntries.size();
     }
 
-    public void setTasks(List<WeatherEntry> weatherEntries) {
+    public void setTasks(List<WeatherEntry> weatherEntries, HashMap<String, FurtherForecastFragment.DaySummary> daySummaryEntries, String[] days) {
         mWeatherEntries = weatherEntries;
+        mDaySummaryEntries = daySummaryEntries;
+        mDays = days;
     }
 
     class WeatherViewHolder extends RecyclerView.ViewHolder {

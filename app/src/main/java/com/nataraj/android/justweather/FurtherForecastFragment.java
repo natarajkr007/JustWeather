@@ -32,6 +32,7 @@ public class FurtherForecastFragment extends Fragment {
     private ForecastAdapter mForecastAdapter;
     private AppDatabase mDb;
     private HashMap<String, DaySummary> daySummaryEntries;
+    private String[] days = new String[5];
 
     public FurtherForecastFragment() {
         // empty constructor required
@@ -80,7 +81,7 @@ public class FurtherForecastFragment extends Fragment {
             @Override
             public void onChanged(@Nullable List<WeatherEntry> weatherEntries) {
                 makeDayWiseWeatherForecast(weatherEntries);
-                mForecastAdapter.setTasks(weatherEntries);
+                mForecastAdapter.setTasks(weatherEntries, daySummaryEntries, days);
                 mForecastAdapter.notifyDataSetChanged();
             }
         });
@@ -107,6 +108,7 @@ public class FurtherForecastFragment extends Fragment {
     }
 
     public void makeDayWiseWeatherForecast(List<WeatherEntry> weatherEntries) {
+        int i = 0;
         for (WeatherEntry weatherEntry: weatherEntries) {
             if (!daySummaryEntries.containsKey(weatherEntry.getDate())) {
                 DaySummary daySummary = new DaySummary();
@@ -117,11 +119,16 @@ public class FurtherForecastFragment extends Fragment {
                 daySummary.maxTemp = weatherEntry.getMaxTemp();
                 daySummary.maxTempC = weatherEntry.getMaxTempC();
                 daySummary.maxTempF = weatherEntry.getMaxTempF();
+                daySummary.weatherDescription = weatherEntry.getWeatherDescription();
+                daySummary.weatherIcon = weatherEntry.getWeatherIcon();
+                daySummary.windSpeed = weatherEntry.getWindSpeed();
+                daySummary.windDirection = weatherEntry.getWindDirection();
                 daySummary.humidity = weatherEntry.getHumidity();
                 daySummary.pressure = weatherEntry.getPressure();
                 daySummary.hourWeather.add(weatherEntry);
 
                 daySummaryEntries.put(weatherEntry.getDate(), daySummary);
+                days[i++] = weatherEntry.getDate();
             } else {
                 DaySummary daySummary = daySummaryEntries.get(weatherEntry.getDate());
                 if (daySummary.minTemp > weatherEntry.getMinTemp()) {
@@ -133,6 +140,10 @@ public class FurtherForecastFragment extends Fragment {
                     daySummary.maxTemp = weatherEntry.getMaxTemp();
                     daySummary.maxTempC = weatherEntry.getMaxTempC();
                     daySummary.maxTempF = weatherEntry.getMaxTempF();
+                    daySummary.weatherDescription = weatherEntry.getWeatherDescription();
+                    daySummary.weatherIcon = weatherEntry.getWeatherIcon();
+                    daySummary.windSpeed = weatherEntry.getWindSpeed();
+                    daySummary.windDirection = weatherEntry.getWindDirection();
                 }
                 daySummary.humidity = Math.max(daySummary.humidity, weatherEntry.getHumidity());
                 daySummary.pressure = Math.max(daySummary.pressure, weatherEntry.getPressure());
@@ -148,6 +159,10 @@ public class FurtherForecastFragment extends Fragment {
         String maxTempC;
         String minTempF;
         String maxTempF;
+        String weatherDescription;
+        String weatherIcon;
+        double windSpeed;
+        String windDirection;
         double humidity;
         double pressure;
         List<WeatherEntry> hourWeather = new ArrayList<>();
