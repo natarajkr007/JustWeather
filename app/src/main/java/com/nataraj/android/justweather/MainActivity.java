@@ -2,6 +2,7 @@ package com.nataraj.android.justweather;
 
 import android.app.SearchManager;
 import android.arch.lifecycle.ViewModel;
+import android.arch.persistence.room.PrimaryKey;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +14,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,10 +34,11 @@ import com.nataraj.android.justweather.sync.JustWeatherSyncTask;
 
 import org.w3c.dom.Text;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
     private AppDatabase mDb;
@@ -54,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//        setting up the swipe to refresh
+        mSwipeRefreshLayout = findViewById(R.id.main_swipe_refresh);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
 //        setting up the navigation drawer
         mDrawerLayout = findViewById(R.id.main_navigation_drawer);
 
@@ -250,5 +256,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         Log.d(TAG, "Data nuked");
+    }
+
+    @Override
+    public void onRefresh() {
+        prefs = getSharedPreferences(getString(R.string.shared_pref_name), MODE_PRIVATE);
+        String city = prefs.getString(getString(R.string.city_name), getString(R.string.def_city));
+        mSwipeRefreshLayout.setRefreshing(false);
+        setCity(city);
     }
 }
