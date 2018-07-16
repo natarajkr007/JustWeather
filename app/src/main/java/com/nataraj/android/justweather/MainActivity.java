@@ -160,8 +160,29 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         mViewPager.setAdapter(forecastPagerAdapter);
 
 //        tab layout setup
-        TabLayout tabLayout = findViewById(R.id.forecast_tabs);
+        final TabLayout tabLayout = findViewById(R.id.forecast_tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
+        mViewPager.addOnPageChangeListener( new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled( int position, float v, int i1 ) {
+            }
+
+            @Override
+            public void onPageSelected( int position ) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged( int state ) {
+                enableDisableSwipeRefresh( state == ViewPager.SCROLL_STATE_IDLE );
+            }
+        });
+    }
+
+    private void enableDisableSwipeRefresh(boolean enable) {
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setEnabled(enable);
+        }
     }
 
     @Override

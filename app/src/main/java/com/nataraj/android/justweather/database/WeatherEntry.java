@@ -13,7 +13,6 @@ import java.util.Date;
  * Created by nataraj-7085 on 4/7/18.
  */
 
-// TODO handle uniqueness on millies
 @Entity(tableName = "forecast")
 public class WeatherEntry {
 
@@ -81,12 +80,10 @@ public class WeatherEntry {
         String formattedToday = dateFormat.format(todayDate);
         String[] splitDate = formattedToday.split(",");
         if (splitDate[0].equals(date)) {
-            String displayDate = "Today";
-            return displayDate;
+            return "Today";
         } else {
 //            String displayDate = splitDate[1] + ", " + splitDate[2] + " " + splitDate[3];
-            String displayDate = date;
-            return displayDate;
+            return date;
         }
     }
 
