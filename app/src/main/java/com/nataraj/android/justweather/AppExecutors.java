@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
  * Created by nataraj-7085 on 5/7/18.
  */
 
-public class AppExecutors {
+class AppExecutors {
     // For Singleton instantiation
     private static final Object LOCK = new Object();
     private static AppExecutors sInstance;
@@ -25,7 +25,7 @@ public class AppExecutors {
         this.mainThread = mainThread;
     }
 
-    public static AppExecutors getInstance() {
+    static AppExecutors getInstance() {
         if (sInstance == null) {
             synchronized (LOCK) {
                 sInstance = new AppExecutors(Executors.newSingleThreadExecutor(),
@@ -36,15 +36,15 @@ public class AppExecutors {
         return sInstance;
     }
 
-    public Executor diskIO() {
+    Executor diskIO() {
         return diskIO;
     }
 
-    public Executor mainThread() {
+    Executor mainThread() {
         return mainThread;
     }
 
-    public Executor networkIO() {
+    Executor networkIO() {
         return networkIO;
     }
 

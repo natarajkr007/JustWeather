@@ -173,32 +173,32 @@ public class WeatherEntry {
     }
 
     public String getWindDirection() {
-        String direction = "Unknown";
+        String direction;
         if (windDeg >= 337.5 || windDeg < 22.5) {
             direction = "N";
-        } else if (windDeg >= 22.5 && windDeg < 67.5) {
+        } else if (windDeg < 67.5) {
             direction = "NE";
-        } else if (windDeg >= 67.5 && windDeg < 112.5) {
+        } else if (windDeg < 112.5) {
             direction = "E";
-        } else if (windDeg >= 112.5 && windDeg < 157.5) {
+        } else if (windDeg < 157.5) {
             direction = "SE";
-        } else if (windDeg >= 157.5 && windDeg < 202.5) {
+        } else if (windDeg < 202.5) {
             direction = "S";
-        } else if (windDeg >= 202.5 && windDeg < 247.5) {
+        } else if (windDeg < 247.5) {
             direction = "SW";
-        } else if (windDeg >= 247.5 && windDeg < 292.5) {
+        } else if (windDeg < 292.5) {
             direction = "W";
-        } else if (windDeg >= 292.5 && windDeg < 337.5) {
+        } else {
             direction = "NW";
         }
         return direction;
     }
 
-    public double getRain3h() {
+    double getRain3h() {
         return rain3h;
     }
 
-    public double getSnow3h() {
+    double getSnow3h() {
         return snow3h;
     }
 
@@ -206,7 +206,7 @@ public class WeatherEntry {
         return id;
     }
 
-    public long getMillis() {
+    long getMillis() {
         return millis;
     }
 

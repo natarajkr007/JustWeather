@@ -20,10 +20,6 @@ import java.util.Scanner;
 public final class NetworkUtils {
 
     private static final String TAG = NetworkUtils.class.getSimpleName();
-    /*
-        Example url to get response
-        api.openweathermap.org/data/2.5/forecast?q=London,us&mode=json&appid=<api_key>
-    */
 
     private static final String API_URL = "https://api.openweathermap.org";
     private static final String API_PATH = "data/2.5/forecast";
