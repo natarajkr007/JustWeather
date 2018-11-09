@@ -1,11 +1,7 @@
 package com.nataraj.android.justweather;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.nataraj.android.justweather.ViewModel.WeatherViewModel;
 import com.nataraj.android.justweather.database.AppDatabase;
 import com.nataraj.android.justweather.database.WeatherEntry;
 

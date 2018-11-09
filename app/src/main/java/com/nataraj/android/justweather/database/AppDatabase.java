@@ -27,7 +27,7 @@ public abstract class AppDatabase extends RoomDatabase {
                         .build();
             }
         }
-        Log.d(TAG, "Getting pre created instance");
+        Log.d(TAG, "Getting pre-created instance");
         return sInstance;
     }
 

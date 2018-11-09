@@ -1,11 +1,12 @@
 package com.nataraj.android.justweather.network;
 
+import android.support.annotation.NonNull;
+
 import com.nataraj.android.justweather.gson.CurrentWeather;
 import com.nataraj.android.justweather.utilities.Config;
 
 import java.util.HashMap;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -38,16 +39,26 @@ public class OpenWeatherMapClient {
         return instance;
     }
 
+    public Call<CurrentWeather> getCurrentWeather(String location, String country) {
+        if (country == null) country = Config.getDefaultCountry();
+
+        return openWeatherMapService.callApi(Config.getCurrentWeatherApiPath(), getApiParams(location, country));
+    }
+
     public Call<CurrentWeather> getForecast(String location, String country) {
 
         if (country == null) country = Config.getDefaultCountry();
 
+        return openWeatherMapService.callApi(Config.getForecastApiPath(), getApiParams(location, country));
+    }
+
+    private HashMap<String, String> getApiParams(String location, String country) {
         HashMap<String, String> params = new HashMap<>();
 
         params.put(Config.getQueryKey(), String.format(Config.getQueryValue(), location, country));
         params.put(Config.getModeKey(), Config.getModeValue());
         params.put(Config.getApiKey(), Config.getApiKeyValue());
 
-        return openWeatherMapService.getForecast(Config.getApiPath(), params);
+        return params;
     }
 }

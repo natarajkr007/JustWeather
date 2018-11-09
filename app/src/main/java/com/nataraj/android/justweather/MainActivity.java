@@ -1,5 +1,6 @@
 package com.nataraj.android.justweather;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
@@ -23,8 +24,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nataraj.android.justweather.ViewModel.CurrentWeatherViewModel;
+import com.nataraj.android.justweather.ViewModel.ViewModelFactory;
 import com.nataraj.android.justweather.database.AppDatabase;
 import com.nataraj.android.justweather.sync.JustWeatherSyncTask;
+import com.nataraj.android.justweather.utilities.Config;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -70,6 +74,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         mProgressBar = findViewById(R.id.progress_bar);
         mViewPager = findViewById(R.id.weather_view_pager);
         mWarnTextView = findViewById(R.id.tv_warn);
+
+        ViewModelFactory viewModelFactory = new ViewModelFactory(init_city, Config.getDefaultCountry());
+        ViewModelProviders.of(this, viewModelFactory).get(CurrentWeatherViewModel.class);
 
         AppExecutors.getInstance().networkIO().execute(new Runnable() {
             @Override
@@ -173,7 +180,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private void setPrefs(String cityName) {
         prefEdit = getSharedPreferences(getString(R.string.shared_pref_name), MODE_PRIVATE)
                 .edit();
-//        prefEdit.putString(getString(R.string.units_key), getString(R.string.celcius));
         prefEdit.putString(getString(R.string.city_name), cityName);
         prefEdit.apply();
     }

@@ -14,8 +14,22 @@ public class Main {
     @SerializedName(value = "temp_max")
     private String maxTemp;
 
+    @SerializedName("sea_level")
+    private double seaLevel;
+
+    @SerializedName("grnd_level")
+    private double grndLevel;
+
     public String getTemp() {
         return temp;
+    }
+
+    public double getSeaLevel() {
+        return seaLevel;
+    }
+
+    public double getGrndLevel() {
+        return grndLevel;
     }
 
     public String getPressure() {

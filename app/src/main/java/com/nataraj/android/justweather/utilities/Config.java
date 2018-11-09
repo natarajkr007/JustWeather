@@ -3,7 +3,8 @@ package com.nataraj.android.justweather.utilities;
 public final class Config {
 
     private static final String BASE_URL = "https://api.openweathermap.org/";
-    private static final String API_PATH = "data/2.5/weather";
+    private static final String FORECAST_API_PATH = "data/2.5/forecast";
+    private static final String CURR_WEATHER_API_PATH = "data/2.5/weather";
     private static final String DEFAULT_COUNTRY = "in";
     private static final String QUERY_KEY = "q";
     private static final String QUERY_VALUE = "%1$s,%2$s";
@@ -17,9 +18,12 @@ public final class Config {
         return BASE_URL;
     }
 
-    public static String getApiPath() {
-        return API_PATH;
+    public static String getForecastApiPath() {
+        return FORECAST_API_PATH;
+    }
 
+    public static String getCurrentWeatherApiPath() {
+        return CURR_WEATHER_API_PATH;
     }
 
     public static String getQueryKey() {

@@ -1,7 +1,6 @@
 package com.nataraj.android.justweather;
 
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.SharedPreferences;
@@ -17,14 +16,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nataraj.android.justweather.ViewModel.WeatherViewModel;
 import com.nataraj.android.justweather.database.AppDatabase;
 import com.nataraj.android.justweather.database.WeatherEntry;
 import com.nataraj.android.justweather.utilities.WeatherIconUtils;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**

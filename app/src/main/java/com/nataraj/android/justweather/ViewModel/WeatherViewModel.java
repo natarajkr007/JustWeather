@@ -1,4 +1,4 @@
-package com.nataraj.android.justweather;
+package com.nataraj.android.justweather.ViewModel;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;

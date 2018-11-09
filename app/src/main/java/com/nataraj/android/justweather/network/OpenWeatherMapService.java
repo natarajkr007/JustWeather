@@ -12,5 +12,5 @@ import retrofit2.http.QueryMap;
 public interface OpenWeatherMapService {
 
     @GET("{path}")
-    Call<CurrentWeather> getForecast(@Path("path") String relativePath, @QueryMap HashMap<String, String> params);
+    Call<CurrentWeather> callApi(@Path("path") String relativePath, @QueryMap HashMap<String, String> params);
 }

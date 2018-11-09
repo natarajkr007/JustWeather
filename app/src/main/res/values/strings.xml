@@ -12,5 +12,9 @@
     <string name="celcius">\u00b0 C</string>
     <string name="farenheit">\u00b0 F</string>
     <string name="city_name">city</string>
+    <string name="country_name">city</string>
     <string name="def_city">Kuppam</string>
+    <string name="def_country">IN</string>
+
+    <string name="weather_image_content_desc">Weather Image</string>
 </resources>

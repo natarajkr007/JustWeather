@@ -20,7 +20,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:fontFamily="casual"
+            app:fontFamily="casual"
             android:textColor="@android:color/black"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -33,7 +33,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:fontFamily="casual"
+            app:fontFamily="casual"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/oneday_date"
             tools:text="Day  35\u00b0\u2191 \u22c5 Night 25\u00b0\u2193" />
@@ -57,11 +57,11 @@
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:fontFamily="casual"
+            app:fontFamily="casual"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/curr_temp"
-            tools:text="Cloudly" />
+            tools:text="Cloudy" />
 
         <ImageView
             android:id="@+id/weather_icon"
@@ -72,7 +72,8 @@
             android:layout_marginTop="64dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_sunny" />
+            tools:src="@drawable/ic_sunny"
+            android:contentDescription="@string/weather_image_content_desc" />
     </android.support.constraint.ConstraintLayout>
 
     <android.support.v7.widget.RecyclerView
