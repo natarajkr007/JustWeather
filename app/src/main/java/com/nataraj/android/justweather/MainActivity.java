@@ -1,13 +1,7 @@
 package com.nataraj.android.justweather;
 
-import android.app.SearchManager;
-import android.arch.lifecycle.ViewModel;
-import android.arch.persistence.room.PrimaryKey;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -31,8 +25,6 @@ import android.widget.Toast;
 
 import com.nataraj.android.justweather.database.AppDatabase;
 import com.nataraj.android.justweather.sync.JustWeatherSyncTask;
-
-import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -67,23 +59,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         mDb = AppDatabase.getsInstance(getApplicationContext());
         deleteData();
 
-        //        test: to check the data
-//        new AsyncTask<Void, Void, Void>() {
-//
-//            @Override
-//            protected Void doInBackground(Void... voids) {
-//                Context context = getApplicationContext();
-//                JustWeatherSyncTask.syncWeather(context, mDb);
-//                return null;
-//            }
-//
-//            @Override
-//            protected void onPostExecute(Void aVoid) {
-//                setViewPager();
-//            }
-//        }.execute();
-
-//        creating shared preference
         prefs = getSharedPreferences(getString(R.string.shared_pref_name), MODE_PRIVATE);
         if (!prefs.contains(getString(R.string.city_name))) {
             setPrefs(getString(R.string.def_city));

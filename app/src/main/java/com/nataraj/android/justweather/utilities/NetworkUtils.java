@@ -30,6 +30,10 @@ public final class NetworkUtils {
     private static final String QUERY_PARAM = "q";
     private static final String COUNTRY = "in";
 
+    public static String getApiUrl() {
+        return API_URL;
+    }
+
     private static final String IMG_URL = "http://openweathermap.org/img/w";
 
     public static URL getURL(Context context, String location) {
