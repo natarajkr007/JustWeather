@@ -2,7 +2,6 @@ package com.nataraj.android.justweather;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +17,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nataraj.android.justweather.ViewModel.CurrentWeatherViewModel;
-import com.nataraj.android.justweather.ViewModel.ViewModelFactory;
 import com.nataraj.android.justweather.ViewModel.WeatherViewModel;
-import com.nataraj.android.justweather.database.AppDatabase;
 import com.nataraj.android.justweather.database.WeatherEntry;
 import com.nataraj.android.justweather.gson.CurrentWeather;
+import com.nataraj.android.justweather.utilities.ConverterUtil;
 import com.nataraj.android.justweather.utilities.WeatherIconUtils;
 
 import java.util.List;
@@ -31,10 +30,7 @@ import java.util.List;
  */
 public class TodayForecastFragment extends Fragment {
 
-    private static final String TAG = TodayForecastFragment.class.getSimpleName();
-
     private WeatherEntry presentForecast;
-    private AppDatabase mDb;
 
     private TextView dateView;
     private TextView minMaxTempView;
@@ -44,9 +40,11 @@ public class TodayForecastFragment extends Fragment {
     private TextView humidityView;
     private TextView pressureView;
     private TextView windView;
+    private TextView gistView;
 
-    private RecyclerView mHourForecastRecyclerView;
     private TodayForecastAdapter mTodayForecastAdapter;
+    private CurrentWeatherViewModel currentWeatherViewModel;
+    private WeatherViewModel weatherViewModel;
 
     private AppCompatActivity fragmentActivity;
 
@@ -59,11 +57,15 @@ public class TodayForecastFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         fragmentActivity = (AppCompatActivity) getActivity();
+        if (fragmentActivity != null) {
+            weatherViewModel = ViewModelProviders.of(fragmentActivity).get(WeatherViewModel.class);
+            currentWeatherViewModel = ViewModelProviders.of(fragmentActivity).get(CurrentWeatherViewModel.class);
+        }
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.one_day_forecast, container, false);
+        View rootView = inflater.inflate(R.layout.current_weather_layout, container, false);
 
         dateView = rootView.findViewById(R.id.oneday_date);
         minMaxTempView = rootView.findViewById(R.id.min_max_temp);
@@ -73,15 +75,14 @@ public class TodayForecastFragment extends Fragment {
         humidityView = rootView.findViewById(R.id.tv_humidity_val);
         pressureView = rootView.findViewById(R.id.tv_pressure_val);
         windView = rootView.findViewById(R.id.tv_wind_val);
+        gistView = rootView.findViewById(R.id.current_weather_gist);
 
-        mHourForecastRecyclerView = rootView.findViewById(R.id.hour_forecast_recyclerview);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        RecyclerView mHourForecastRecyclerView = rootView.findViewById(R.id.hour_forecast_recyclerview);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(fragmentActivity, LinearLayoutManager.HORIZONTAL, false);
         mHourForecastRecyclerView.setLayoutManager(linearLayoutManager);
         mHourForecastRecyclerView.setHasFixedSize(true);
         mTodayForecastAdapter = new TodayForecastAdapter(this.getActivity());
         mHourForecastRecyclerView.setAdapter(mTodayForecastAdapter);
-
-        mDb = AppDatabase.getsInstance(getActivity().getApplicationContext());
 
         return rootView;
     }
@@ -90,16 +91,31 @@ public class TodayForecastFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        WeatherViewModel viewModel = null;
-        CurrentWeatherViewModel currentWeatherViewModel = null;
+        if (currentWeatherViewModel != null) {
+            currentWeatherViewModel.getCurrentWeatherLiveData().observe(fragmentActivity, new Observer<CurrentWeather>() {
+                @Override
+                public void onChanged(@Nullable CurrentWeather currentWeather) {
+                    if (currentWeather != null) {
+                        dateView.setText(
+                                currentWeather.checkIfToday()
+                                        ? String.format(getString(R.string.today_date_format), (String) DateFormat.format("h:mm a", currentWeather.getDate()))
+                                        : (String) DateFormat.format("d-MM-yyyy, h:mm a", currentWeather.getDate())
+                        );
 
-        if (fragmentActivity != null) {
-            viewModel = ViewModelProviders.of(fragmentActivity).get(WeatherViewModel.class);
-            currentWeatherViewModel = ViewModelProviders.of(fragmentActivity).get(CurrentWeatherViewModel.class);
+                        nowTempView.setText(ConverterUtil.getTemp(currentWeather.getMain().getTemp()));
+                        weatherDescriptionView.setText(currentWeather.getWeatherDescription());
+                        setGistView(currentWeather);
+                        weatherIcon.setImageResource(WeatherIconUtils.getWeatherIconId(currentWeather.getWeatherIcon()));
+                        humidityView.setText(currentWeather.getMain().getHumidity());
+                        pressureView.setText(currentWeather.getMain().getHumidity());
+                        windView.setText(currentWeather.getWind().getStats());
+                    }
+                }
+            });
         }
 
-        if (viewModel != null) {
-            viewModel.getTodayForecast().observe(fragmentActivity, new Observer<List<WeatherEntry>>() {
+        if (weatherViewModel != null) {
+            weatherViewModel.getTodayForecast().observe(fragmentActivity, new Observer<List<WeatherEntry>>() {
                 @Override
                 public void onChanged(@Nullable List<WeatherEntry> weatherEntries) {
                     if (weatherEntries != null && weatherEntries.size() > 0) {
@@ -107,43 +123,28 @@ public class TodayForecastFragment extends Fragment {
                     } else {
                         return;
                     }
-                    dateView.setText(presentForecast.getDate());
 
-                    String minTemp, maxTemp;
+                    String minTemp = ConverterUtil.getTemp(presentForecast.getMinTemp());
+                    String maxTemp = ConverterUtil.getTemp(presentForecast.getMaxTemp());
 
-                    SharedPreferences preferences = fragmentActivity.getSharedPreferences(getString(R.string.shared_pref_name), getActivity().MODE_PRIVATE);
-                    if (preferences.getString(getString(R.string.units_key), getString(R.string.celcius)).equals(getString(R.string.celcius))) {
-                        minTemp = presentForecast.getMinTempC();
-                        maxTemp = presentForecast.getMaxTempC();
-                    } else {
-                        minTemp = presentForecast.getMinTempF();
-                        maxTemp = presentForecast.getMaxTempF();
-                    }
-
-                    minMaxTempView.setText(
-                            "High " + maxTemp + "\u2191 \u22c5 Low " +
-                                    minTemp + "\u2193"
-                    );
-                    nowTempView.setText(maxTemp);
-                    weatherDescriptionView.setText(presentForecast.getWeatherDescription());
-                    weatherIcon.setImageResource(WeatherIconUtils.getWeatherIconId(presentForecast.getWeatherIcon()));
-                    humidityView.setText(String.valueOf(presentForecast.getHumidity()) + "%");
-                    pressureView.setText(String.valueOf(presentForecast.getPressure()) + " hPa");
-                    windView.setText(String.valueOf(presentForecast.getWindSpeed()) + "km/h" + " " + presentForecast.getWindDirection());
+                    minMaxTempView.setText(String.format(getString(R.string.min_max_place_holder), maxTemp, minTemp));
 
                     mTodayForecastAdapter.setTasks(weatherEntries);
                     mTodayForecastAdapter.notifyDataSetChanged();
                 }
             });
         }
+    }
 
-        if (currentWeatherViewModel != null) {
-            currentWeatherViewModel.currentWeatherLiveData.observe(fragmentActivity, new Observer<CurrentWeather>() {
-                @Override
-                public void onChanged(@Nullable CurrentWeather currentWeather) {
-
-                }
-            });
+    private void setGistView(CurrentWeather currentWeather) {
+        if (currentWeather.getMain().getMinTemp() == currentWeather.getMain().getMaxTemp()) {
+            gistView.setVisibility(View.GONE);
+        } else {
+            gistView.setVisibility(View.VISIBLE);
+            gistView.setText(String.format(getString(R.string.current_weather_gist),
+                    ConverterUtil.getTemp(currentWeather.getMain().getMaxTemp()),
+                    ConverterUtil.getTemp(currentWeather.getMain().getMinTemp()))
+            );
         }
     }
 }

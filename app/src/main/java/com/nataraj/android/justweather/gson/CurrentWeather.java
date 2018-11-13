@@ -1,10 +1,18 @@
 package com.nataraj.android.justweather.gson;
 
+import android.app.Application;
+import android.content.Context;
+import android.text.format.DateFormat;
+
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
 import java.util.List;
 
 public class CurrentWeather {
+
+    private static final String DATE_CHECK_FORMAT = "dd/MM/yyyy";
+    private static final String TIME_FORMAT = "h:mm a";
 
     private Coord coord;
     private List<Weather> weather;
@@ -15,6 +23,17 @@ public class CurrentWeather {
     private Clouds clouds;
     private Rain rain;
     private Snow snow;
+
+    @SerializedName("dt")
+    private long date;
+
+    private Sys sys;
+    private long id;
+
+    @SerializedName("name")
+    private String city;
+
+    private int cod;
 
     public Coord getCoord() {
         return coord;
@@ -53,7 +72,15 @@ public class CurrentWeather {
     }
 
     public long getDate() {
-        return date;
+        return date * 1000;
+    }
+
+    public boolean checkIfToday() {
+        String todayDate = (String) DateFormat.format(DATE_CHECK_FORMAT, new Date());
+        String currentWeatherDate = (String) DateFormat.format(DATE_CHECK_FORMAT, new Date(getDate()));
+
+        return todayDate.equals(currentWeatherDate);
+
     }
 
     public Sys getSys() {
@@ -72,14 +99,11 @@ public class CurrentWeather {
         return cod;
     }
 
-    @SerializedName("dt")
-    private long date;
+    public String getWeatherDescription() {
+        return getWeather().get(0).getDescription();
+    }
 
-    private Sys sys;
-    private long id;
-
-    @SerializedName("name")
-    private String city;
-
-    private int cod;
+    public String getWeatherIcon() {
+        return getWeather().get(0).getIcon();
+    }
 }

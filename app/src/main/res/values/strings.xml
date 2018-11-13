@@ -15,6 +15,9 @@
     <string name="country_name">city</string>
     <string name="def_city">Kuppam</string>
     <string name="def_country">IN</string>
+    <string name="current_weather_gist">Currently Max %1$s\u00b0\u2191 \u22c5 Min %2$s\u00b0\u2191 in this area</string>
+    <string name="today_date_format">Today, %1$s</string>
+    <string name="min_max_place_holder">High %1$s \u2191 \u22c5 Low %2$s \u2193</string>
 
     <string name="weather_image_content_desc">Weather Image</string>
 </resources>

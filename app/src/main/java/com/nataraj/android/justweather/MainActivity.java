@@ -28,6 +28,7 @@ import com.nataraj.android.justweather.ViewModel.CurrentWeatherViewModel;
 import com.nataraj.android.justweather.ViewModel.ViewModelFactory;
 import com.nataraj.android.justweather.database.AppDatabase;
 import com.nataraj.android.justweather.sync.JustWeatherSyncTask;
+import com.nataraj.android.justweather.utilities.AppDelegate;
 import com.nataraj.android.justweather.utilities.Config;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
@@ -36,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private DrawerLayout mDrawerLayout;
-    private Toolbar mToolbar;
     private AppDatabase mDb;
 
     private TextView cityTextView;
@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private SharedPreferences prefs;
     private SharedPreferences.Editor prefEdit;
+
+    private CurrentWeatherViewModel currentWeatherViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         mWarnTextView = findViewById(R.id.tv_warn);
 
         ViewModelFactory viewModelFactory = new ViewModelFactory(init_city, Config.getDefaultCountry());
-        ViewModelProviders.of(this, viewModelFactory).get(CurrentWeatherViewModel.class);
+        currentWeatherViewModel = ViewModelProviders.of(this, viewModelFactory).get(CurrentWeatherViewModel.class);
 
         AppExecutors.getInstance().networkIO().execute(new Runnable() {
             @Override
@@ -104,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         });
 
         NavigationView navigationView = findViewById(R.id.nav_view);
-        if (prefs.getString(getString(R.string.units_key), getString(R.string.celcius)).equals(getString(R.string.celcius))) {
+        if (AppDelegate.appDelegate.isCelsius()) {
             navigationView.setCheckedItem(R.id.pref_celcius);
         } else {
             navigationView.setCheckedItem(R.id.pref_farenheit);
@@ -125,14 +127,16 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         );
 
 //        setting up the custom toolbar
-        mToolbar = findViewById(R.id.toolbar);
+        Toolbar mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
 //        setting up the nav bar toggle button
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
+        }
     }
 
     private void setViewPager() {
@@ -197,9 +201,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         mViewPager.setVisibility(View.GONE);
         deleteData();
         cityTextView.setText(location);
-
         setPrefs(location);
 
+        currentWeatherViewModel.loadCurrentWeather(location, null);
         AppExecutors.getInstance().networkIO().execute(new Runnable() {
             @Override
             public void run() {
@@ -213,7 +217,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 //                            setViewPager(); used ViewModel to update changed data
                             mProgressBar.setVisibility(View.GONE);
                             mViewPager.setVisibility(View.VISIBLE);
-                            return;
                         } else {
                             mProgressBar.setVisibility(View.GONE);
                             mWarnTextView.setVisibility(View.VISIBLE);

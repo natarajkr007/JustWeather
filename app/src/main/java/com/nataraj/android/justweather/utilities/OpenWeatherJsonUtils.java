@@ -1,6 +1,5 @@
 package com.nataraj.android.justweather.utilities;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.util.Log;
 

@@ -3,6 +3,7 @@ package com.nataraj.android.justweather.utilities;
 public final class Config {
 
     private static final String BASE_URL = "https://api.openweathermap.org/";
+    private static final String WEATHER_ICON_BASE_URL = "http://openweathermap.org/img/w/%1$s.png";
     private static final String FORECAST_API_PATH = "data/2.5/forecast";
     private static final String CURR_WEATHER_API_PATH = "data/2.5/weather";
     private static final String DEFAULT_COUNTRY = "in";
@@ -16,6 +17,10 @@ public final class Config {
 
     public static String getBaseUrl() {
         return BASE_URL;
+    }
+
+    public static String getWeatherIconBaseUrl() {
+        return WEATHER_ICON_BASE_URL;
     }
 
     public static String getForecastApiPath() {

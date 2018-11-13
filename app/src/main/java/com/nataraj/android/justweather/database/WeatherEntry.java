@@ -2,8 +2,6 @@ package com.nataraj.android.justweather.database;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Index;
-import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.PrimaryKey;
 
 import java.text.SimpleDateFormat;
@@ -82,7 +80,6 @@ public class WeatherEntry {
         if (splitDate[0].equals(date)) {
             return "Today";
         } else {
-//            String displayDate = splitDate[1] + ", " + splitDate[2] + " " + splitDate[3];
             return date;
         }
     }

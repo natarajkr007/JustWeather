@@ -4,15 +4,15 @@ import com.google.gson.annotations.SerializedName;
 
 public class Main {
 
-    private String temp;
-    private String pressure;
-    private String humidity;
+    private double temp;
+    private double pressure;
+    private double humidity;
 
     @SerializedName(value = "temp_min")
-    private String minTemp;
+    private double minTemp;
 
     @SerializedName(value = "temp_max")
-    private String maxTemp;
+    private double maxTemp;
 
     @SerializedName("sea_level")
     private double seaLevel;
@@ -20,7 +20,7 @@ public class Main {
     @SerializedName("grnd_level")
     private double grndLevel;
 
-    public String getTemp() {
+    public double getTemp() {
         return temp;
     }
 
@@ -33,18 +33,18 @@ public class Main {
     }
 
     public String getPressure() {
-        return pressure;
+        return Double.toString(pressure) + "hPa";
     }
 
     public String getHumidity() {
-        return humidity;
+        return Double.toString(humidity) + "%";
     }
 
-    public String getMinTemp() {
+    public double getMinTemp() {
         return minTemp;
     }
 
-    public String getMaxTemp() {
+    public double getMaxTemp() {
         return maxTemp;
     }
 }
