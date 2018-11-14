@@ -20,15 +20,19 @@ public class ForecastList {
     private String dateText;
 
     public long getDate() {
-        return date;
+        return date * 1000;
     }
 
     public Main getMain() {
         return main;
     }
 
-    public List<Weather> getWeather() {
-        return weather;
+    public String getWeatherDescription() {
+        return weather.get(0).getDescription();
+    }
+
+    public String getWeatherIcon() {
+        return weather.get(0).getIcon();
     }
 
     public Clouds getClouds() {

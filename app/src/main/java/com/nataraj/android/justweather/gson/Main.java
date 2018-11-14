@@ -32,11 +32,19 @@ public class Main {
         return grndLevel;
     }
 
-    public String getPressure() {
+    public double getPressure() {
+        return pressure;
+    }
+
+    public String getStringPressure() {
         return Double.toString(pressure) + "hPa";
     }
 
-    public String getHumidity() {
+    public double getHumidity() {
+        return humidity;
+    }
+
+    public String getStringHumidity() {
         return Double.toString(humidity) + "%";
     }
 

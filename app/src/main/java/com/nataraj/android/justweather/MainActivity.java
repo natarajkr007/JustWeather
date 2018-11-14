@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             @Override
             public void run() {
                 final Context context = getApplicationContext();
-                final boolean res = JustWeatherSyncTask.syncWeather(context, mDb, init_city);
+                final boolean res = JustWeatherSyncTask.syncForecast(mDb, init_city);
 
                 Log.d(TAG, "run: on UI Thread");
                 runOnUiThread(new Runnable() {
@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             @Override
             public void run() {
                 final Context context = getApplicationContext();
-                final boolean res = JustWeatherSyncTask.syncWeather(context, mDb, location);
+                final boolean res = JustWeatherSyncTask.syncForecast(mDb, location);
 
                 runOnUiThread(new Runnable() {
                     @Override

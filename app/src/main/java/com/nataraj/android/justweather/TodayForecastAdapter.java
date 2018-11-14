@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nataraj.android.justweather.database.WeatherEntry;
-import com.nataraj.android.justweather.utilities.NetworkUtils;
 import com.nataraj.android.justweather.utilities.WeatherIconUtils;
 
 import java.util.List;

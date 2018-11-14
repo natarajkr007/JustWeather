@@ -106,8 +106,8 @@ public class TodayForecastFragment extends Fragment {
                         weatherDescriptionView.setText(currentWeather.getWeatherDescription());
                         setGistView(currentWeather);
                         weatherIcon.setImageResource(WeatherIconUtils.getWeatherIconId(currentWeather.getWeatherIcon()));
-                        humidityView.setText(currentWeather.getMain().getHumidity());
-                        pressureView.setText(currentWeather.getMain().getHumidity());
+                        humidityView.setText(currentWeather.getMain().getStringHumidity());
+                        pressureView.setText(currentWeather.getMain().getStringHumidity());
                         windView.setText(currentWeather.getWind().getStats());
                     }
                 }
