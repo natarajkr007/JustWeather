@@ -4,12 +4,15 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+@SuppressWarnings({"UnusedDeclaration"})
 public class ForecastList {
 
     @SerializedName("dt")
     private long date;
 
     private Main main;
+
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private List<Weather> weather;
     private Clouds clouds;
     private Wind wind;

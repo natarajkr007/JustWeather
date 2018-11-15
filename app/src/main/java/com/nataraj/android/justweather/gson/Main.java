@@ -2,6 +2,7 @@ package com.nataraj.android.justweather.gson;
 
 import com.google.gson.annotations.SerializedName;
 
+@SuppressWarnings({"UnusedDeclaration"})
 public class Main {
 
     private double temp;
@@ -37,7 +38,7 @@ public class Main {
     }
 
     public String getStringPressure() {
-        return Double.toString(pressure) + "hPa";
+        return Double.toString(pressure) + " hPa";
     }
 
     public double getHumidity() {

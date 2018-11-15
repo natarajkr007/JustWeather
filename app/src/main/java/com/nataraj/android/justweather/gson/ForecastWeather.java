@@ -2,6 +2,7 @@ package com.nataraj.android.justweather.gson;
 
 import java.util.List;
 
+@SuppressWarnings({"UnusedDeclaration"})
 public class ForecastWeather {
 
     private String cod;

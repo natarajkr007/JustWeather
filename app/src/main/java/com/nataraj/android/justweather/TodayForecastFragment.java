@@ -15,9 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nataraj.android.justweather.ViewModel.CurrentWeatherViewModel;
-import com.nataraj.android.justweather.ViewModel.WeatherViewModel;
+import com.nataraj.android.justweather.ViewModel.ForecastViewModel;
 import com.nataraj.android.justweather.database.WeatherEntry;
 import com.nataraj.android.justweather.gson.CurrentWeather;
 import com.nataraj.android.justweather.utilities.ConverterUtil;
@@ -44,7 +45,7 @@ public class TodayForecastFragment extends Fragment {
 
     private TodayForecastAdapter mTodayForecastAdapter;
     private CurrentWeatherViewModel currentWeatherViewModel;
-    private WeatherViewModel weatherViewModel;
+    private ForecastViewModel forecastViewModel;
 
     private AppCompatActivity fragmentActivity;
 
@@ -58,7 +59,7 @@ public class TodayForecastFragment extends Fragment {
 
         fragmentActivity = (AppCompatActivity) getActivity();
         if (fragmentActivity != null) {
-            weatherViewModel = ViewModelProviders.of(fragmentActivity).get(WeatherViewModel.class);
+            forecastViewModel = ViewModelProviders.of(fragmentActivity).get(ForecastViewModel.class);
             currentWeatherViewModel = ViewModelProviders.of(fragmentActivity).get(CurrentWeatherViewModel.class);
         }
     }
@@ -107,15 +108,15 @@ public class TodayForecastFragment extends Fragment {
                         setGistView(currentWeather);
                         weatherIcon.setImageResource(WeatherIconUtils.getWeatherIconId(currentWeather.getWeatherIcon()));
                         humidityView.setText(currentWeather.getMain().getStringHumidity());
-                        pressureView.setText(currentWeather.getMain().getStringHumidity());
+                        pressureView.setText(currentWeather.getMain().getStringPressure());
                         windView.setText(currentWeather.getWind().getStats());
                     }
                 }
             });
         }
 
-        if (weatherViewModel != null) {
-            weatherViewModel.getTodayForecast().observe(fragmentActivity, new Observer<List<WeatherEntry>>() {
+        if (forecastViewModel != null) {
+            forecastViewModel.getTodayForecast().observe(fragmentActivity, new Observer<List<WeatherEntry>>() {
                 @Override
                 public void onChanged(@Nullable List<WeatherEntry> weatherEntries) {
                     if (weatherEntries != null && weatherEntries.size() > 0) {

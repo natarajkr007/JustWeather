@@ -1,5 +1,6 @@
 package com.nataraj.android.justweather.gson;
 
+@SuppressWarnings({"UnusedDeclaration"})
 public class Coord {
 
     private String lat;

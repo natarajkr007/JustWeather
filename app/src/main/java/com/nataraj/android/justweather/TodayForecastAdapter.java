@@ -1,7 +1,7 @@
 package com.nataraj.android.justweather;
 
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nataraj.android.justweather.database.WeatherEntry;
+import com.nataraj.android.justweather.utilities.ConverterUtil;
 import com.nataraj.android.justweather.utilities.WeatherIconUtils;
 
 import java.util.List;
@@ -26,12 +27,13 @@ public class TodayForecastAdapter extends RecyclerView.Adapter<TodayForecastAdap
     private List<WeatherEntry> mHourWeatherEntries;
     private Context mContext;
 
-    public TodayForecastAdapter(Context context) {
+    TodayForecastAdapter(Context context) {
         mContext = context;
     }
 
+    @NonNull
     @Override
-    public WeatherViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public WeatherViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(mContext)
                 .inflate(R.layout.hour_forecast_list_item, parent, false);
@@ -40,19 +42,10 @@ public class TodayForecastAdapter extends RecyclerView.Adapter<TodayForecastAdap
     }
 
     @Override
-    public void onBindViewHolder(WeatherViewHolder holder, int position) {
-        String minTemp, maxTemp;
-
+    public void onBindViewHolder(@NonNull WeatherViewHolder holder, int position) {
         final WeatherEntry hourWeatherEntry = mHourWeatherEntries.get(position);
 
-        SharedPreferences preferences = mContext.getSharedPreferences(mContext.getString(R.string.shared_pref_name), mContext.MODE_PRIVATE);
-        if (preferences.getString(mContext.getString(R.string.units_key), mContext.getString(R.string.celcius)).equals(mContext.getString(R.string.celcius))) {
-            minTemp = hourWeatherEntry.getMinTempC();
-            maxTemp = hourWeatherEntry.getMaxTempC();
-        } else {
-            minTemp = hourWeatherEntry.getMinTempF();
-            maxTemp = hourWeatherEntry.getMaxTempF();
-        }
+        String maxTemp = ConverterUtil.getTemp(hourWeatherEntry.getMaxTemp());
 
         holder.hourTempView.setText(maxTemp);
         holder.hourTimeView.setText(hourWeatherEntry.getDecodedTime());
@@ -67,7 +60,7 @@ public class TodayForecastAdapter extends RecyclerView.Adapter<TodayForecastAdap
         return mHourWeatherEntries.size();
     }
 
-    public void setTasks(List<WeatherEntry> hourWeatherEntries) {
+    void setTasks(List<WeatherEntry> hourWeatherEntries) {
         mHourWeatherEntries = hourWeatherEntries;
     }
 
@@ -77,7 +70,7 @@ public class TodayForecastAdapter extends RecyclerView.Adapter<TodayForecastAdap
         ImageView hourWeatherIcon;
         TextView hourTimeView;
 
-        public WeatherViewHolder(View itemView) {
+        WeatherViewHolder(View itemView) {
             super(itemView);
 
             hourTempView = itemView.findViewById(R.id.hour_temp);

@@ -2,6 +2,7 @@ package com.nataraj.android.justweather.gson;
 
 import com.google.gson.annotations.SerializedName;
 
+@SuppressWarnings({"UnusedDeclaration"})
 public class Rain {
 
     @SerializedName("3h")

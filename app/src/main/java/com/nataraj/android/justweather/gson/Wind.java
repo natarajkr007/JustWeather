@@ -2,6 +2,7 @@ package com.nataraj.android.justweather.gson;
 
 import com.nataraj.android.justweather.utilities.ConverterUtil;
 
+@SuppressWarnings({"UnusedDeclaration"})
 public class Wind {
 
     private double speed;

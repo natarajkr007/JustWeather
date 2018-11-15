@@ -14,11 +14,10 @@ public class OpenWeatherMapClient {
 
     private static OpenWeatherMapClient instance = null;
 
-    private Retrofit retrofit;
     private OpenWeatherMapService openWeatherMapService;
 
     private OpenWeatherMapClient() {
-        retrofit = new Retrofit.Builder()
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Config.getBaseUrl())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

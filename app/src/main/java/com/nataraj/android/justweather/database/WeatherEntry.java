@@ -1,8 +1,11 @@
 package com.nataraj.android.justweather.database;
 
+import android.annotation.SuppressLint;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+
+import com.nataraj.android.justweather.utilities.ConverterUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -73,6 +76,7 @@ public class WeatherEntry {
     }
 
     public String getDate() {
+        @SuppressLint("SimpleDateFormat")
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd,EEEE,d,MMM");
         Date todayDate = new Date();
         String formattedToday = dateFormat.format(todayDate);
@@ -117,36 +121,20 @@ public class WeatherEntry {
         return maxTemp;
     }
 
-    public String getMinTempC() {
-        double temp = minTemp - 273.15;
-        String res = String.format("%.1f", temp) + "\u00b0\u0043";
-        return res;
-    }
-
-    public String getMaxTempC() {
-        double temp = maxTemp - 273.15;
-        String res = String.format("%.1f", temp) + "\u00b0\u0043";
-        return res;
-    }
-
-    public String getMinTempF() {
-        double temp = ((9 * minTemp) / 5) - 459.67;
-        String res = String.format("%.1f", temp) + "\u00b0\u0046";
-        return res;
-    }
-
-    public String getMaxTempF() {
-        double temp = ((9 * maxTemp) / 5) - 459.67;
-        String res = String.format("%.1f", temp) + "\u00b0\u0046";
-        return res;
+    public double getHumidity() {
+        return humidity;
     }
 
     public double getPressure() {
         return pressure;
     }
 
-    public double getHumidity() {
-        return humidity;
+    public String getStringPressure() {
+        return Double.toString(pressure) + " hPa";
+    }
+
+    public String getStringHumidity() {
+        return Double.toString(humidity) + "%";
     }
 
     public String getWeatherDescription() {
@@ -157,7 +145,7 @@ public class WeatherEntry {
         return weatherIcon;
     }
 
-    public int getCloudsPercent() {
+    int getCloudsPercent() {
         return cloudsPercent;
     }
 
@@ -165,30 +153,12 @@ public class WeatherEntry {
         return windSpeed;
     }
 
-    public double getWindDeg() {
-        return windDeg;
+    public String getWindStats() {
+        return Double.toString(getWindSpeed()) + " km/h " + ConverterUtil.getWindDirection(getWindDeg());
     }
 
-    public String getWindDirection() {
-        String direction;
-        if (windDeg >= 337.5 || windDeg < 22.5) {
-            direction = "N";
-        } else if (windDeg < 67.5) {
-            direction = "NE";
-        } else if (windDeg < 112.5) {
-            direction = "E";
-        } else if (windDeg < 157.5) {
-            direction = "SE";
-        } else if (windDeg < 202.5) {
-            direction = "S";
-        } else if (windDeg < 247.5) {
-            direction = "SW";
-        } else if (windDeg < 292.5) {
-            direction = "W";
-        } else {
-            direction = "NW";
-        }
-        return direction;
+    public double getWindDeg() {
+        return windDeg;
     }
 
     double getRain3h() {

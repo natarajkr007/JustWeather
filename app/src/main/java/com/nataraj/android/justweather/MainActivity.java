@@ -1,9 +1,11 @@
 package com.nataraj.android.justweather;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
@@ -15,7 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,15 +26,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nataraj.android.justweather.ViewModel.CurrentWeatherViewModel;
+import com.nataraj.android.justweather.ViewModel.ForecastViewModel;
 import com.nataraj.android.justweather.ViewModel.ViewModelFactory;
 import com.nataraj.android.justweather.database.AppDatabase;
-import com.nataraj.android.justweather.sync.JustWeatherSyncTask;
 import com.nataraj.android.justweather.utilities.AppDelegate;
 import com.nataraj.android.justweather.utilities.Config;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
-
-    private static final String TAG = MainActivity.class.getSimpleName();
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private DrawerLayout mDrawerLayout;
@@ -48,13 +47,14 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private SharedPreferences.Editor prefEdit;
 
     private CurrentWeatherViewModel currentWeatherViewModel;
+    private ForecastViewModel forecastViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate: orientation Changed");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        AppCompatActivity reference = this;
 //        setting up the swipe to refresh
         mSwipeRefreshLayout = findViewById(R.id.main_swipe_refresh);
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
 //        instantiating db instance
         mDb = AppDatabase.getsInstance(getApplicationContext());
-        deleteData();
 
         prefs = getSharedPreferences(getString(R.string.shared_pref_name), MODE_PRIVATE);
         if (!prefs.contains(getString(R.string.city_name))) {
@@ -77,31 +76,27 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         mViewPager = findViewById(R.id.weather_view_pager);
         mWarnTextView = findViewById(R.id.tv_warn);
 
-        ViewModelFactory viewModelFactory = new ViewModelFactory(init_city, Config.getDefaultCountry());
-        currentWeatherViewModel = ViewModelProviders.of(this, viewModelFactory).get(CurrentWeatherViewModel.class);
+        ViewModelFactory currentWeatherViewModelFactory = new ViewModelFactory(init_city, Config.getDefaultCountry());
+        currentWeatherViewModel = ViewModelProviders.of(reference, currentWeatherViewModelFactory).get(CurrentWeatherViewModel.class);
 
-        AppExecutors.getInstance().networkIO().execute(new Runnable() {
+        ViewModelFactory forecastViewModelFactory = new ViewModelFactory(getApplication(), init_city, Config.getDefaultCountry());
+        forecastViewModel = ViewModelProviders.of(reference, forecastViewModelFactory).get(ForecastViewModel.class);
+
+        forecastViewModel.getStatus().observe(reference, new Observer<Boolean>() {
             @Override
-            public void run() {
-                final Context context = getApplicationContext();
-                final boolean res = JustWeatherSyncTask.syncForecast(mDb, init_city);
-
-                Log.d(TAG, "run: on UI Thread");
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        setViewPager();
-                        if (res) {
-                            mProgressBar.setVisibility(View.GONE);
-                            mViewPager.setVisibility(View.VISIBLE);
-                        } else {
-                            mProgressBar.setVisibility(View.GONE);
-                            mWarnTextView.setVisibility(View.VISIBLE);
-                            Toast.makeText(context, "City not found", Toast.LENGTH_SHORT).show();
-                            Toast.makeText(context, "Please, change the city", Toast.LENGTH_SHORT).show();
-                        }
+            public void onChanged(@Nullable Boolean res) {
+                if (res != null) {
+                    setViewPager();
+                    if (res) {
+                        mProgressBar.setVisibility(View.GONE);
+                        mViewPager.setVisibility(View.VISIBLE);
+                    } else {
+                        mProgressBar.setVisibility(View.GONE);
+                        mWarnTextView.setVisibility(View.VISIBLE);
+                        Toast.makeText(getApplicationContext(), "City not found", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Please, change the city", Toast.LENGTH_SHORT).show();
                     }
-                });
+                }
             }
         });
 
@@ -208,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             @Override
             public void run() {
                 final Context context = getApplicationContext();
-                final boolean res = JustWeatherSyncTask.syncForecast(mDb, location);
+                final boolean res = forecastViewModel.fetchData(location, null);
 
                 runOnUiThread(new Runnable() {
                     @Override
@@ -260,7 +255,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 mDb.weatherDao().nukeData();
             }
         });
-        Log.d(TAG, "Data nuked");
     }
 
     @Override

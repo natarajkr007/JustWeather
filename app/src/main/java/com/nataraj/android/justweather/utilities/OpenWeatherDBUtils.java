@@ -1,6 +1,5 @@
 package com.nataraj.android.justweather.utilities;
 
-import com.nataraj.android.justweather.AppExecutors;
 import com.nataraj.android.justweather.database.AppDatabase;
 import com.nataraj.android.justweather.database.WeatherEntry;
 import com.nataraj.android.justweather.gson.ForecastList;
@@ -32,14 +31,9 @@ public class OpenWeatherDBUtils {
             final double snow3h = forecast.getSnow() == null ? 0 : forecast.getSnow().getVol3h();
             final String[] dateNTime = forecast.getDateText().split(" ");
 
-            AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                @Override
-                public void run() {
-                    WeatherEntry weatherEntry = new WeatherEntry(millisDate, minTemp, maxTemp, pressure, humidity, weatherDescription,
-                            weatherIcon, cloudsPercent,windSpeed, windDeg, rain3h, snow3h, dateNTime[0], dateNTime[1]);
-                    mDb.weatherDao().insertWeatherEntry(weatherEntry);
-                }
-            });
+            WeatherEntry weatherEntry = new WeatherEntry(millisDate, minTemp, maxTemp, pressure, humidity, weatherDescription,
+                    weatherIcon, cloudsPercent,windSpeed, windDeg, rain3h, snow3h, dateNTime[0], dateNTime[1]);
+            mDb.weatherDao().insertWeatherEntry(weatherEntry);
         }
     }
 }

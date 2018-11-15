@@ -1,7 +1,5 @@
 package com.nataraj.android.justweather.gson;
 
-import android.app.Application;
-import android.content.Context;
 import android.text.format.DateFormat;
 
 import com.google.gson.annotations.SerializedName;
@@ -9,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 import java.util.List;
 
+@SuppressWarnings({"UnusedDeclaration"})
 public class CurrentWeather {
 
     private static final String DATE_CHECK_FORMAT = "dd/MM/yyyy";
@@ -39,7 +38,7 @@ public class CurrentWeather {
         return coord;
     }
 
-    public List<Weather> getWeather() {
+    private List<Weather> getWeather() {
         return weather;
     }
 

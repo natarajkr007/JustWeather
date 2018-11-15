@@ -3,7 +3,6 @@ package com.nataraj.android.justweather.ViewModel;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.nataraj.android.justweather.gson.CurrentWeather;
 import com.nataraj.android.justweather.network.OpenWeatherMapClient;
@@ -23,10 +22,6 @@ public class CurrentWeatherViewModel extends ViewModel {
 
     public MutableLiveData<CurrentWeather> getCurrentWeatherLiveData() {
         return currentWeatherLiveData;
-    }
-
-    public MutableLiveData<String> getFailureException() {
-        return failureException;
     }
 
     public void loadCurrentWeather(String location, String country) {

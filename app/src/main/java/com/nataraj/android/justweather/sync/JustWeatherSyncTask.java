@@ -15,10 +15,10 @@ import retrofit2.Response;
 
 public class JustWeatherSyncTask {
 
-    synchronized public static boolean syncForecast(final AppDatabase mDb, String location) {
+    synchronized public static boolean syncForecast(final AppDatabase mDb, String location, String country) {
 
         try {
-            Response<ForecastWeather> response = OpenWeatherMapClient.getInstance().getForecast(location, null).execute();
+            Response<ForecastWeather> response = OpenWeatherMapClient.getInstance().getForecast(location, country).execute();
             if (response.isSuccessful() && response.body() != null) {
                 OpenWeatherDBUtils.insertForecastIntoDB(response.body(), mDb);
                 return true;

@@ -1,5 +1,6 @@
 package com.nataraj.android.justweather.gson;
 
+@SuppressWarnings({"UnusedDeclaration"})
 public class City {
 
     private double id;
@@ -14,17 +15,5 @@ public class City {
 
     public String getName() {
         return name;
-    }
-
-    public Coord getCoord() {
-        return coord;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public double getPopulation() {
-        return population;
     }
 }
