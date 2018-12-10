@@ -21,4 +21,7 @@
     <string name="current_weather_error_message">Could not get current weather information</string>
 
     <string name="weather_image_content_desc">Weather Image</string>
+    
+    <string name="channel_name">JustWeather notifications</string>
+    <string name="channel_description">Weather data will be showing once in every 3 hours</string>
 </resources>

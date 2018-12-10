@@ -15,13 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nataraj.android.justweather.ViewModel.CurrentWeatherViewModel;
 import com.nataraj.android.justweather.ViewModel.ForecastViewModel;
 import com.nataraj.android.justweather.database.WeatherEntry;
 import com.nataraj.android.justweather.gson.CurrentWeather;
 import com.nataraj.android.justweather.utilities.ConverterUtil;
+import com.nataraj.android.justweather.utilities.NotificationUtil;
 import com.nataraj.android.justweather.utilities.WeatherIconUtils;
 
 import java.util.List;
