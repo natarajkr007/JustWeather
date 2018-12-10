@@ -15,7 +15,7 @@ public class ForecastPagerAdapter extends FragmentPagerAdapter {
 
     private Context mContext;
 
-    public ForecastPagerAdapter(FragmentManager fm, Context context) {
+    ForecastPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
         mContext = context;
     }

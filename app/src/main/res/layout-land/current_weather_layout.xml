@@ -63,20 +63,48 @@
             app:layout_constraintTop_toBottomOf="@+id/curr_temp"
             tools:text="Cloudy" />
 
+        <TextView
+            android:id="@+id/current_weather_gist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+            app:fontFamily="casual"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/curr_weather_description"
+            tools:text="Current Max 35\u00b0\u2191 \u22c5 Min 25\u00b0\u2191 in this area" />
+
         <ImageView
             android:id="@+id/weather_icon"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:layout_marginTop="56dp"
+            android:layout_marginEnd="36dp"
+            android:layout_marginRight="36dp"
+            android:contentDescription="@string/weather_image_content_desc"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_sunny" />
+
+        <include
+            android:id="@+id/other_detail"
+            layout="@layout/rem_weather_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:contentDescription="@string/weather_image_content_desc"
-            app:layout_constraintBottom_toBottomOf="@+id/curr_temp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/curr_weather_description"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/curr_temp"
-            app:layout_constraintTop_toTopOf="@+id/curr_temp"
-            tools:src="@drawable/ic_sunny" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -85,12 +113,5 @@
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
         android:paddingRight="10dp" />
-
-    <include
-        android:id="@+id/other_detail"
-        layout="@layout/rem_weather_detail"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
 
 </LinearLayout>

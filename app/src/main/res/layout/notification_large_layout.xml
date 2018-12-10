@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    style="@style/Widget.Compat.NotificationActionContainer">
+
+    <TextView
+        android:id="@+id/notification_city_name"
+        style="@style/TextAppearance.Compat.Notification.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        tools:text="Kuppam" />
+
+    <TextView
+        android:id="@+id/separator"
+        style="@style/TextAppearance.Compat.Notification.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_toEndOf="@+id/notification_city_name"
+        android:layout_toRightOf="@+id/notification_city_name"
+        android:text="\u22c5"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/notification_temp_view"
+        style="@style/TextAppearance.Compat.Notification.Info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_toEndOf="@+id/separator"
+        android:layout_toRightOf="@+id/separator"
+        android:textSize="30sp"
+        tools:text="33° C" />
+
+    <ImageView
+        android:id="@+id/notification_weather_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
+        tools:src="@drawable/ic_cloud_sun" />
+
+</RelativeLayout>

@@ -2,7 +2,6 @@ package com.nataraj.android.justweather.database;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
@@ -20,9 +19,6 @@ public interface WeatherDao {
 
     @Insert
     void insertWeatherEntry(WeatherEntry weatherEntry);
-
-    @Delete
-    void deleteWeatherEntry(WeatherEntry weatherEntry);
 
     @Query("SELECT * FROM forecast WHERE date = :date")
     LiveData<List<WeatherEntry>> loadForecastByDate(String date);

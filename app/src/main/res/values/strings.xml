@@ -12,5 +12,16 @@
     <string name="celcius">\u00b0 C</string>
     <string name="farenheit">\u00b0 F</string>
     <string name="city_name">city</string>
+    <string name="country_name">city</string>
     <string name="def_city">Kuppam</string>
+    <string name="def_country">IN</string>
+    <string name="current_weather_gist">Currently Max %1$s\u00b0\u2191 \u22c5 Min %2$s\u00b0\u2191 in this area</string>
+    <string name="today_date_format">Today, %1$s</string>
+    <string name="min_max_place_holder">High %1$s \u2191 \u22c5 Low %2$s \u2193</string>
+    <string name="current_weather_error_message">Could not get current weather information</string>
+
+    <string name="weather_image_content_desc">Weather Image</string>
+    
+    <string name="channel_name">JustWeather notifications</string>
+    <string name="channel_description">Weather data will be showing once in every 3 hours</string>
 </resources>
