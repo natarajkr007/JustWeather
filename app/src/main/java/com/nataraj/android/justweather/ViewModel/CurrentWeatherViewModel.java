@@ -1,8 +1,8 @@
 package com.nataraj.android.justweather.ViewModel;
 
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModel;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.nataraj.android.justweather.gson.CurrentWeather;
 import com.nataraj.android.justweather.network.OpenWeatherMapClient;

@@ -6,16 +6,16 @@ import android.app.NotificationManager;
 import android.content.SharedPreferences;
 import android.os.Build;
 
-import com.nataraj.android.justweather.R;
-import com.nataraj.android.justweather.services.DataFetchWorker;
-
-import java.util.concurrent.TimeUnit;
-
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
+
+import com.nataraj.android.justweather.R;
+import com.nataraj.android.justweather.services.DataFetchWorker;
+
+import java.util.concurrent.TimeUnit;
 
 public class AppDelegate extends Application {
 
@@ -41,14 +41,14 @@ public class AppDelegate extends Application {
     }
 
     private void initWorker() {
-        PeriodicWorkRequest.Builder dataFetchWorkBuilder = new PeriodicWorkRequest.Builder(DataFetchWorker.class, 3, TimeUnit.HOURS);
+        PeriodicWorkRequest.Builder dataFetchWorkBuilder = new PeriodicWorkRequest.Builder(DataFetchWorker.class, 3, TimeUnit.MINUTES);
 
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .setRequiresBatteryNotLow(true)
                 .build();
 
-        WorkManager.getInstance().enqueueUniquePeriodicWork("3_hour_weather_fetch_work",
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork("3_hour_weather_fetch_work",
                 ExistingPeriodicWorkPolicy.KEEP,
                 dataFetchWorkBuilder.setConstraints(constraints).build());
     }
@@ -65,7 +65,9 @@ public class AppDelegate extends Application {
             NotificationChannel channel = new NotificationChannel(NotificationUtil.NOTIFICATION_3H_CHANNEL_ID, name, importance);
             channel.setDescription(description);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
         }
     }
 
