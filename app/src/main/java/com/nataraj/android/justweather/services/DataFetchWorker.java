@@ -1,7 +1,10 @@
 package com.nataraj.android.justweather.services;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 
 import com.nataraj.android.justweather.gson.CurrentWeather;
 import com.nataraj.android.justweather.network.OpenWeatherMapClient;
@@ -12,8 +15,6 @@ import com.nataraj.android.justweather.utilities.WeatherIconUtils;
 
 import java.io.IOException;
 
-import androidx.work.Worker;
-import androidx.work.WorkerParameters;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -43,14 +44,14 @@ public class DataFetchWorker extends Worker {
                             ConverterUtil.getTemp(currentWeather.getMain().getTemp()),
                             WeatherIconUtils.getWeatherIconId(currentWeather.getWeatherIcon()));
 
-                    return Result.SUCCESS;
+                    return Result.success();
                 }
             }
 
-            return Result.FAILURE;
+            return Result.failure();
         } catch (IOException e) {
             e.printStackTrace();
-            return Result.RETRY;
+            return Result.retry();
         }
     }
 }
